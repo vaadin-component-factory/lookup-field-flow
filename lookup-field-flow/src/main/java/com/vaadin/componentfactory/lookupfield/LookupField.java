@@ -3,10 +3,16 @@ package com.vaadin.componentfactory.lookupfield;
 import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.dependency.Uses;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.HasFilterableDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
@@ -16,6 +22,10 @@ import com.vaadin.flow.function.SerializableFunction;
 import java.util.Collection;
 import java.util.Objects;
 
+@Uses(value = Dialog.class)
+@Uses(value = Icon.class)
+@Uses(value = TextField.class)
+@Uses(value = Button.class)
 @Tag("vcf-lookup-field")
 @JsModule("./vcf-lookup-field.js")
 public class LookupField<T> extends Div implements HasFilterableDataProvider<T, String> {
