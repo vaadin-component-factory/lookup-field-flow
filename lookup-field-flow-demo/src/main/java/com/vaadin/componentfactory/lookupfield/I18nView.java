@@ -22,13 +22,13 @@ public class I18nView extends Div {
         lookupField.setDataProvider(DataProvider.ofCollection(items));
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
         lookupField.setLabel("Item selector");
-        lookupField.setTitle("utilisateurs");
+        lookupField.setHeader("utilisateurs");
         lookupField.setI18n(new LookupField.LookupFieldI18n()
             .setSearcharialabel("Cliquer pour ouvrir la fenêtre de recherche")
             .setSelect("Sélectionner")
-            .setTitleprefix("Recherche:")
+            .setHeaderprefix("Recherche:")
             .setSearch("Recherche")
-            .setTitlepostfix("")
+            .setHeaderpostfix("")
             .setCancel("Annuler"));
         add(lookupField);
     }

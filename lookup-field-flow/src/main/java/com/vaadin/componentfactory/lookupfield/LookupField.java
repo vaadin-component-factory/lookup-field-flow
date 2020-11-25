@@ -214,8 +214,8 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
         grid.setWidth(width);
     }
 
-    public void setDialogTitle(String title) {
-        getElement().setAttribute("title", title);
+    public void setHeader(String header) {
+        getElement().setAttribute("header", header);
     }
 
     /**
@@ -406,8 +406,8 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
         private String select;
         private String cancel;
         private String searcharialabel;
-        private String titleprefix;
-        private String titlepostfix;
+        private String headerprefix;
+        private String headerpostfix;
         private String search;
 
         public String getSearch() {
@@ -446,21 +446,21 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
             return this;
         }
 
-        public String getTitleprefix() {
-            return titleprefix;
+        public String getHeaderprefix() {
+            return headerprefix;
         }
 
-        public LookupFieldI18n setTitleprefix(String titleprefix) {
-            this.titleprefix = titleprefix;
+        public LookupFieldI18n setHeaderprefix(String headerprefix) {
+            this.headerprefix = headerprefix;
             return this;
         }
 
-        public String getTitlepostfix() {
-            return titlepostfix;
+        public String getHeaderpostfix() {
+            return headerpostfix;
         }
 
-        public LookupFieldI18n setTitlepostfix(String titlepostfix) {
-            this.titlepostfix = titlepostfix;
+        public LookupFieldI18n setHeaderpostfix(String headerpostfix) {
+            this.headerpostfix = headerpostfix;
             return this;
         }
     }

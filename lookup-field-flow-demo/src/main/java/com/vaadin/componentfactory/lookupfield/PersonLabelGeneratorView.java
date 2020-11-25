@@ -22,7 +22,7 @@ public class PersonLabelGeneratorView extends Div {
         lookupField.setGridWidth("80vw");
         lookupField.getGrid().setHeight("70vh");
         lookupField.setItemLabelGenerator(item -> item.getId() + "-" + item.toString());
-        lookupField.setDialogTitle("Person Search");
+        lookupField.setHeader("Person Search");
         add(lookupField);
     }
 
