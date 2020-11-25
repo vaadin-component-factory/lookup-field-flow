@@ -26,8 +26,4 @@ public class SimpleView extends Div {
         add(lookupField);
     }
 
-    private List<Person> getItems() {
-        PersonService personService = new PersonService();
-        return personService.fetchAll();
-    }
 }

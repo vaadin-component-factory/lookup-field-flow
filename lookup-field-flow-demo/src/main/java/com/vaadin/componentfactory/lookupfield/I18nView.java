@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Basic example with setItems
+ * Example for i18n
  */
 @Route(value = "i18n", layout = MainLayout.class)
 public class I18nView extends Div {
@@ -21,8 +21,11 @@ public class I18nView extends Div {
         List<String> items = Arrays.asList("item1","item2", "item3");
         lookupField.setDataProvider(DataProvider.ofCollection(items));
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
+        // set the label of the field
         lookupField.setLabel("Item selector");
+        //set the header text of the dialog
         lookupField.setHeader("utilisateurs");
+        // translate the cpations of the component
         lookupField.setI18n(new LookupField.LookupFieldI18n()
             .setSearcharialabel("Cliquer pour ouvrir la fenêtre de recherche")
             .setSelect("Sélectionner")
@@ -33,8 +36,4 @@ public class I18nView extends Div {
         add(lookupField);
     }
 
-    private List<Person> getItems() {
-        PersonService personService = new PersonService();
-        return personService.fetchAll();
-    }
 }

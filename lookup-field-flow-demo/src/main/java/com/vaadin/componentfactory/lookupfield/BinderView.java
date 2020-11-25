@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Basic example with setItems
+ * Basic example with a binder and field validation
  */
 @Route(value = "binder", layout = MainLayout.class)
 public class BinderView extends Div {
@@ -22,20 +22,25 @@ public class BinderView extends Div {
     private Person person = new Person();
 
     public BinderView() {
-        LookupField<Address> lookupField = new LookupField<>();
         Address address1 = new Address("20140", "Turku");
         Address address2 = new Address("10000", "Helsinki");
         Address address3 = new Address("20150", "Turku");
         List<Address> items = Arrays.asList(address1, address2, address3);
+
+        LookupField<Address> lookupField = new LookupField<>();
         lookupField.setItems(items);
+        // update the grid to show 2 columns
         lookupField.getGrid().addColumn(Address::getPostalCode).setHeader("Postal code");
         lookupField.getGrid().addColumn(Address::getCity).setHeader("City");
         lookupField.setLabel("Address");
+        // add field helper
         lookupField.setHelperText("helper text for the component");
+        // update the width
         lookupField.setWidthFull();
         add(lookupField);
 
         Binder<Person> personBinder = new Binder<>();
+        // add a validation
         personBinder.forField(lookupField)
             .asRequired("Address is required")
             .withValidator(e -> "Turku".equals(e.getCity()), "Only Turku is valid")

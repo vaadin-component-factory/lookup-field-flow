@@ -9,7 +9,8 @@ import com.vaadin.flow.router.Route;
 import java.util.List;
 
 /**
- * Basic example with a person
+ * Basic example with a person with a grid generated automatically
+ * with all the fields of the person
  */
 @Route(value = "person", layout = MainLayout.class)
 public class PersonView extends Div {

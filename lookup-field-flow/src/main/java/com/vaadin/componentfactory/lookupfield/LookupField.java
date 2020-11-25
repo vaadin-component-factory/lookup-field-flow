@@ -15,6 +15,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -25,7 +26,6 @@ import com.vaadin.flow.data.binder.HasFilterableDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.internal.JsonSerializer;
@@ -35,14 +35,22 @@ import elemental.json.JsonObject;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
 
+/**
+ * Server-side component for the {@code vcf-lookup-field} webcomponent.
+ *
+ * The LookupField is a combination of a combobox and a dialog for advanced search.
+ *
+ *
+ * @param <T> the type of the items to be inserted in the combo box
+ */
 @Uses(value = Icon.class)
 @Uses(value = TextField.class)
 @Uses(value = Button.class)
 @Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
-@JsModule("./vcf-lookup-field.js")
+@JsModule("@vaadin-component-factory/vcf-lookup-field")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.0.3")
 public class LookupField<T> extends Div implements HasFilterableDataProvider<T, String>,
     HasValueAndElement<AbstractField.ComponentValueChangeEvent<LookupField<T>, T>, T>, HasValidation, HasHelper, HasSize {
 
@@ -70,7 +78,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
     }
 
     /**
-     * Sets the grid
+     * Set the grid
      *
      * @param grid the grid
      */
@@ -91,7 +99,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
     }
 
     /**
-     * Sets the comboBox
+     * Set the comboBox
      *
      * @param comboBox the comboBox
      */
@@ -113,11 +121,28 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
         }
     }
 
+    /**
+     * <p>
+     * Filtering will use a case insensitive match to show all items where the
+     * filter text is a substring of the label displayed for that item, which
+     * you can configure with
+     * {@link #setItemLabelGenerator(ItemLabelGenerator)}.
+     * <p>
+     * @param items the data items to display
+     */
     @Override
     public void setItems(Collection<T> items) {
         setDataProvider(DataProvider.ofCollection(items));
     }
 
+    /**
+     *
+     * @param itemFilter
+     *            filter to check if an item is shown when user typed some text
+     *            into the ComboBox
+     * @param items
+     *            the data items to display
+     */
     public void setItems(ComboBox.ItemFilter<T> itemFilter, Collection<T> items) {
         ListDataProvider<T> listDataProvider = DataProvider.ofCollection(items);
 
@@ -132,6 +157,15 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
         setDataProvider(defaultItemFilter, listDataProvider);
     }
 
+    /**
+     * Sets a list data provider with an item filter as the data provider.
+     *
+     * @param itemFilter
+     *            filter to check if an item is shown when user typed some text
+     *            into the ComboBox
+     * @param listDataProvider
+     *            the list data provider to use, not <code>null</code>
+     */
     public void setDataProvider(ComboBox.ItemFilter<T> itemFilter,
                                 ListDataProvider<T> listDataProvider) {
         Objects.requireNonNull(listDataProvider,
@@ -141,6 +175,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
             filterText -> item -> itemFilter.test(item, filterText));
     }
 
+    @Override
     public <C> void setDataProvider(DataProvider<T, C> dataProvider,
                                     SerializableFunction<String, C> filterConverter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
@@ -182,8 +217,9 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
     }
 
     /**
-     * Filter the grid, todo to change
-     * @param filter
+     * Filter the grid
+     *
+     * @param filter filter text
      */
     @ClientCallable
     private void filterGrid(String filter) {
@@ -214,6 +250,11 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
         grid.setWidth(width);
     }
 
+    /**
+     * Set the header of the dialog
+     *
+     * @param header text for the header of the dialog
+     */
     public void setHeader(String header) {
         getElement().setAttribute("header", header);
     }
@@ -302,7 +343,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
      *
      * @return
      *      {@code true} if resizing is enabled,
-     *      {@code falsoe} otherwiser (default).
+     *      {@code false} otherwiser (default).
      */
     public boolean isResizable() {
         return getElement().getProperty("resizable", false);
