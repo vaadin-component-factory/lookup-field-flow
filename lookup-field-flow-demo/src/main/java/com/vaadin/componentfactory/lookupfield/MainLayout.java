@@ -12,7 +12,9 @@ public class MainLayout extends AppLayout {
         final RouterLink simple = new RouterLink("String Lookup Field", SimpleView.class);
         final RouterLink personLookupField = new RouterLink("Person Lookup Field", PersonView.class);
         final RouterLink personLabelLookupField = new RouterLink("Person with label", PersonLabelGeneratorView.class);
-        final VerticalLayout menuLayout = new VerticalLayout(simple, personLookupField, personLabelLookupField);
+        final RouterLink i18nView = new RouterLink("i18n", I18nView.class);
+        final RouterLink binderView = new RouterLink("binder", BinderView.class);
+        final VerticalLayout menuLayout = new VerticalLayout(simple, personLookupField, personLabelLookupField, i18nView, binderView);
         addToDrawer(menuLayout);
         addToNavbar(drawerToggle);
     }
