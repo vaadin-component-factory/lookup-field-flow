@@ -50,9 +50,4 @@ public class BinderView extends Div {
             Notification.show("Address is now " + person.getAddress())
         );
     }
-
-    private List<Person> getItems() {
-        PersonService personService = new PersonService();
-        return personService.fetchAll();
-    }
 }

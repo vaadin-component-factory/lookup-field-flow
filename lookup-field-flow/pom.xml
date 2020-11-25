@@ -13,6 +13,10 @@
     <description>Lookup Field</description>
 
     <inceptionYear>2020</inceptionYear>
+    <organization>
+        <name>Vaadin Ltd</name>
+        <url>https://vaadin.com/</url>
+    </organization>
 
     <properties>
         <vaadin.version>14.4.2</vaadin.version>

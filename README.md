@@ -17,7 +17,7 @@ This deploys demo at http://localhost:8080
 
 ## Description 
 
-The Lookup field grid component allows you to search a specific record with:
+The Lookup field component allows you to search a specific record with:
 * a combobox
 * a dialog and a grid that can contains all the  fields
 
