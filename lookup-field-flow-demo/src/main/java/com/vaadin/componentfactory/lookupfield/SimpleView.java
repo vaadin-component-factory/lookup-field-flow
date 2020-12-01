@@ -1,8 +1,6 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.componentfactory.lookupfield.bean.Person;
-import com.vaadin.componentfactory.lookupfield.service.PersonService;
-import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
@@ -23,6 +21,7 @@ public class SimpleView extends Div {
         lookupField.setDataProvider(DataProvider.ofCollection(items));
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
         lookupField.setLabel("Item selector");
+        lookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
         add(lookupField);
     }
 

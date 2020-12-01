@@ -21,12 +21,14 @@ package com.vaadin.componentfactory.lookupfield;
  */
 
 import com.vaadin.componentfactory.EnhancedDialog;
+import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasHelper;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasStyle;
+import com.vaadin.flow.component.HasTheme;
 import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.ItemLabelGenerator;
@@ -55,6 +57,8 @@ import elemental.json.JsonObject;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Server-side component for the {@code vcf-lookup-field} webcomponent.
@@ -70,9 +74,9 @@ import java.util.Objects;
 @Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.0.3")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.0.6")
 public class LookupField<T> extends Div implements HasFilterableDataProvider<T, String>,
-    HasValueAndElement<AbstractField.ComponentValueChangeEvent<LookupField<T>, T>, T>, HasValidation, HasHelper, HasSize {
+    HasValueAndElement<AbstractField.ComponentValueChangeEvent<LookupField<T>, T>, T>, HasValidation, HasHelper, HasSize, HasTheme {
 
     private static final String FIELD_SLOT_NAME = "field";
     private static final String GRID_SLOT_NAME = "grid";
@@ -263,11 +267,13 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
 
     /**
      * Set the width of the grid
+     * Also set a max width to 100%
      *
      * @param width the width to set, may be {@code null}
      */
     public void setGridWidth(String width) {
         grid.setWidth(width);
+        grid.setMaxWidth("100%");
     }
 
     /**
@@ -458,6 +464,26 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
     @Override
     public Component getHelperComponent() {
         return comboBox.getHelperComponent();
+    }
+
+    /**
+     * Sets the theme variants of this component. This method overwrites any
+     * previous set theme variants.
+     *
+     * @param variants
+     */
+    public void setThemeVariants(EnhancedDialogVariant... variants) {
+        getElement().getThemeList().clear();
+        addThemeVariants(variants);
+    }
+
+    /**
+     * Adds the theme variants of this component.
+     *
+     * @param variants
+     */
+    public void addThemeVariants(EnhancedDialogVariant... variants) {
+        getElement().getThemeList().addAll(Stream.of(variants).map(EnhancedDialogVariant::getVariantName).collect(Collectors.toList()));
     }
 
     /**
