@@ -74,7 +74,7 @@ import java.util.stream.Stream;
 @Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.0.6")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.0.7")
 public class LookupField<T> extends Div implements HasFilterableDataProvider<T, String>,
     HasValueAndElement<AbstractField.ComponentValueChangeEvent<LookupField<T>, T>, T>, HasValidation, HasHelper, HasSize, HasTheme {
 
