@@ -5,6 +5,7 @@ import com.vaadin.componentfactory.lookupfield.service.PersonService;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * Basic example with a person with a grid generated automatically
  * with all the fields of the person
  */
+@RouteAlias(value = "", layout = MainLayout.class)
 @Route(value = "person", layout = MainLayout.class)
 public class PersonView extends Div {
 

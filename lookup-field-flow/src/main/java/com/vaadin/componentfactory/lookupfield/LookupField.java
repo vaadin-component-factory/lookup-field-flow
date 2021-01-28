@@ -74,18 +74,22 @@ import java.util.stream.Stream;
 @Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.0.7")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.0.8")
 public class LookupField<T> extends Div implements HasFilterableDataProvider<T, String>,
     HasValueAndElement<AbstractField.ComponentValueChangeEvent<LookupField<T>, T>, T>, HasValidation, HasHelper, HasSize, HasTheme {
 
     private static final String FIELD_SLOT_NAME = "field";
     private static final String GRID_SLOT_NAME = "grid";
+    private static final String HEADER_SLOT_NAME = "dialog-header";
+    private static final String FOOTER_SLOT_NAME = "dialog-footer";
     private static final String SLOT_KEY = "slot";
 
     private LookupFieldI18n i18n;
     private Grid<T> grid;
     private ComboBox<T> comboBox;
     private ConfigurableFilterDataProvider<T, Void, String> gridDataProvider;
+    private Component header;
+    private Component footer;
 
     public LookupField() {
         this(new Grid<>(), new ComboBox<>());
@@ -412,7 +416,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
         });
     }
 
-    void runBeforeClientResponse(SerializableConsumer<UI> command) {
+    private void runBeforeClientResponse(SerializableConsumer<UI> command) {
         getElement().getNode().runWhenAttached(ui -> ui
             .beforeClientResponse(this, context -> command.accept(ui)));
     }
@@ -470,7 +474,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
      * Sets the theme variants of this component. This method overwrites any
      * previous set theme variants.
      *
-     * @param variants
+     * @param variants theme variant
      */
     public void setThemeVariants(EnhancedDialogVariant... variants) {
         getElement().getThemeList().clear();
@@ -480,11 +484,70 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
     /**
      * Adds the theme variants of this component.
      *
-     * @param variants
+     * @param variants theme variant
      */
     public void addThemeVariants(EnhancedDialogVariant... variants) {
         getElement().getThemeList().addAll(Stream.of(variants).map(EnhancedDialogVariant::getVariantName).collect(Collectors.toList()));
     }
+
+    /**
+     * Set the header with a custom component
+     *
+     * @param header custom header
+     */
+    public void setHeaderComponent(Component header) {
+        Objects.requireNonNull(grid, "Header cannot be null");
+
+        if (this.header != null && this.header.getElement().getParent() == getElement()) {
+            this.header.getElement().removeFromParent();
+        }
+
+        this.header = header;
+        header.getElement().setAttribute(SLOT_KEY, HEADER_SLOT_NAME);
+
+        // It might already have a parent e.g when injected from a template
+        if (header.getElement().getParent() == null) {
+            getElement().appendChild(header.getElement());
+        }
+    }
+
+    /**
+     * Set the footer with a custom component
+     * WARNING: You have to implement your own buttons to select and close the dialog
+     *
+     * @param footer Custom footer
+     */
+    public void setFooterComponent(Component footer) {
+        Objects.requireNonNull(grid, "Footer cannot be null");
+
+        if (this.footer != null && this.footer.getElement().getParent() == getElement()) {
+            this.footer.getElement().removeFromParent();
+        }
+
+        this.footer = footer;
+        footer.getElement().setAttribute(SLOT_KEY, FOOTER_SLOT_NAME);
+
+        // It might already have a parent e.g when injected from a template
+        if (footer.getElement().getParent() == null) {
+            getElement().appendChild(footer.getElement());
+        }
+    }
+
+    /**
+     * Select and close the dialog
+     */
+    public void footerSelectAction() {
+        copyFieldValueFromGrid();
+        footerCloseAction();
+    }
+
+    /**
+     * Close the dialog
+     */
+    public void footerCloseAction() {
+        getElement().executeJs("$0.__close()", getElement());
+    }
+
 
     /**
      * The internationalization properties for {@link LookupField}.

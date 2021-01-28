@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Basic example with setItems
  */
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "simple", layout = MainLayout.class)
 public class SimpleView extends Div {
 
 
