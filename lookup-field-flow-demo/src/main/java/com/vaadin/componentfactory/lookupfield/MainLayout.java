@@ -14,7 +14,8 @@ public class MainLayout extends AppLayout {
         final RouterLink personLabelLookupField = new RouterLink("Person with label", PersonLabelGeneratorView.class);
         final RouterLink i18nView = new RouterLink("I18n example", I18nView.class);
         final RouterLink binderView = new RouterLink("Binder example", BinderView.class);
-        final VerticalLayout menuLayout = new VerticalLayout(simple, personLookupField, personLabelLookupField, i18nView, binderView);
+        final RouterLink customHeader = new RouterLink("Custom Header", CustomHeaderView.class);
+        final VerticalLayout menuLayout = new VerticalLayout(personLookupField, simple, personLabelLookupField, i18nView, binderView, customHeader);
         addToDrawer(menuLayout);
         addToNavbar(drawerToggle);
     }
