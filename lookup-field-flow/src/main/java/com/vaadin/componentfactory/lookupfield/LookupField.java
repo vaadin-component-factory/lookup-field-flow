@@ -75,7 +75,7 @@ import java.util.stream.Stream;
 @Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.1.0")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.1.1")
 public class LookupField<T> extends Div implements HasFilterableDataProvider<T, String>,
     HasValueAndElement<AbstractField.ComponentValueChangeEvent<LookupField<T>, T>, T>, HasValidation, HasHelper, HasSize, HasTheme {
 
@@ -91,7 +91,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
     private ConfigurableFilterDataProvider<T, Void, String> gridDataProvider;
     private Component header;
     private Component footer;
-    private Notification emptyNotification;
+    private Runnable notificationWhenEmptySelection;
 
     public LookupField() {
         this(new Grid<>(), new ComboBox<>());
@@ -577,20 +577,26 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
      */
     @ClientCallable
     private void openErrorNotification() {
-        getEmptyNotification().open();
+        getNotificationWhenEmptySelection().run();
     }
 
-
-    public Notification getEmptyNotification() {
-        if (emptyNotification == null) {
-            String emptySelection = (getI18n() == null)? "Please select an item.":getI18n().getEmptyselection();
-            emptyNotification = new Notification(emptySelection, 2000, Notification.Position.TOP_CENTER);
+    private Runnable getNotificationWhenEmptySelection() {
+        if (notificationWhenEmptySelection == null) {
+            return () -> {
+                String emptySelection = (getI18n() == null)? "Please select an item.":getI18n().getEmptyselection();
+                new Notification(emptySelection, 2000, Notification.Position.TOP_CENTER).open();
+            };
         }
-        return emptyNotification;
+        return notificationWhenEmptySelection;
     }
 
-    public void setEmptyNotification(Notification emptyNotification) {
-        this.emptyNotification = emptyNotification;
+    /**
+     * Replace the default notification to an action
+     *
+     * @param notificationWhenEmptySelection action to run when the selection is empty and the select button is clicked
+     */
+    public void addEmptySelectionListener(Runnable notificationWhenEmptySelection) {
+        this.notificationWhenEmptySelection = notificationWhenEmptySelection;
     }
 
     /**
