@@ -584,8 +584,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
     public Notification getEmptyNotification() {
         if (emptyNotification == null) {
             String emptySelection = (getI18n() == null)? "Please select an item.":getI18n().getEmptyselection();
-            emptyNotification = new Notification(emptySelection);
-            emptyNotification.setPosition(Notification.Position.TOP_CENTER);
+            emptyNotification = new Notification(emptySelection, 2000, Notification.Position.TOP_CENTER);
         }
         return emptyNotification;
     }
