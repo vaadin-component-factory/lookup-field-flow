@@ -15,7 +15,9 @@ public class MainLayout extends AppLayout {
         final RouterLink i18nView = new RouterLink("I18n example", I18nView.class);
         final RouterLink binderView = new RouterLink("Binder example", BinderView.class);
         final RouterLink customHeader = new RouterLink("Custom Header", CustomHeaderView.class);
-        final VerticalLayout menuLayout = new VerticalLayout(personLookupField, simple, personLabelLookupField, i18nView, binderView, customHeader);
+        final RouterLink enableSelectButtonView = new RouterLink("Selection Button enabled", EnableSelectButtonView.class);
+        final VerticalLayout menuLayout = new VerticalLayout(personLookupField, simple, personLabelLookupField, i18nView,
+                binderView, customHeader, enableSelectButtonView);
         addToDrawer(menuLayout);
         addToNavbar(drawerToggle);
     }

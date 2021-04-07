@@ -43,6 +43,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.HasFilterableDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
@@ -74,7 +75,7 @@ import java.util.stream.Stream;
 @Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.0.8")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.1.1")
 public class LookupField<T> extends Div implements HasFilterableDataProvider<T, String>,
     HasValueAndElement<AbstractField.ComponentValueChangeEvent<LookupField<T>, T>, T>, HasValidation, HasHelper, HasSize, HasTheme {
 
@@ -90,6 +91,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
     private ConfigurableFilterDataProvider<T, Void, String> gridDataProvider;
     private Component header;
     private Component footer;
+    private Runnable notificationWhenEmptySelection;
 
     public LookupField() {
         this(new Grid<>(), new ComboBox<>());
@@ -380,6 +382,28 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
     }
 
     /**
+     * Sets whether the select button is disabled or send an error when the selection is empty or not.
+     *
+     * @param defaultselectdisabled
+     *          {@code true} to disabled the button if no item is disabled,
+     *          {@code false} otherwise.
+     */
+    public void setSelectionDisabledIfEmpty(boolean defaultselectdisabled) {
+        getElement().setProperty("defaultselectdisabled", defaultselectdisabled);
+    }
+
+    /**
+     * Gets whether the select button is disabled or send an error when the selection is empty or not.
+     *
+     * @return
+     *      {@code true} if resizing is enabled,
+     *      {@code false} otherwiser (default).
+     */
+    public boolean getSelectionDisabledIfEmpty() {
+        return getElement().getProperty("defaultselectdisabled", true);
+    }
+
+    /**
      * Gets the internationalization object previously set for this component.
      * <p>
      * Note: updating the object content that is gotten from this method will
@@ -548,6 +572,32 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
         getElement().executeJs("$0.__close()", getElement());
     }
 
+    /**
+     * Copy the selected value of the field into the grid
+     */
+    @ClientCallable
+    private void openErrorNotification() {
+        getNotificationWhenEmptySelection().run();
+    }
+
+    private Runnable getNotificationWhenEmptySelection() {
+        if (notificationWhenEmptySelection == null) {
+            return () -> {
+                String emptySelection = (getI18n() == null)? "Please select an item.":getI18n().getEmptyselection();
+                new Notification(emptySelection, 2000, Notification.Position.TOP_CENTER).open();
+            };
+        }
+        return notificationWhenEmptySelection;
+    }
+
+    /**
+     * Replace the default notification to an action
+     *
+     * @param notificationWhenEmptySelection action to run when the selection is empty and the select button is clicked
+     */
+    public void addEmptySelectionListener(Runnable notificationWhenEmptySelection) {
+        this.notificationWhenEmptySelection = notificationWhenEmptySelection;
+    }
 
     /**
      * The internationalization properties for {@link LookupField}.
@@ -559,6 +609,7 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
         private String headerprefix;
         private String headerpostfix;
         private String search;
+        private String emptyselection;
 
         public String getSearch() {
             return search;
@@ -611,6 +662,15 @@ public class LookupField<T> extends Div implements HasFilterableDataProvider<T, 
 
         public LookupFieldI18n setHeaderpostfix(String headerpostfix) {
             this.headerpostfix = headerpostfix;
+            return this;
+        }
+
+        public String getEmptyselection() {
+            return emptyselection;
+        }
+
+        public LookupFieldI18n setEmptyselection(String emptyselection) {
+            this.emptyselection = emptyselection;
             return this;
         }
     }
