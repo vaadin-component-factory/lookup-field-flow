@@ -48,8 +48,9 @@ import java.util.stream.Stream;
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
 @NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.1.2")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValidation & HasSize & HasFilterableDataProvider<T, String> & HasValue<?, SelectT>,
-        ComponentT extends AbstractLookupField<T,SelectT, ComboboxT, ComponentT>> extends Div
-        implements HasFilterableDataProvider<T, String>, HasValueAndElement<AbstractField.ComponentValueChangeEvent<ComponentT, SelectT>, SelectT>, HasValidation, HasSize, HasTheme {
+        ComponentT extends AbstractLookupField<T,SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
+        implements HasFilterableDataProvider<T, FilterType>,
+        HasValueAndElement<AbstractField.ComponentValueChangeEvent<ComponentT, SelectT>, SelectT>, HasValidation, HasSize, HasTheme {
     protected static final String FIELD_SLOT_NAME = "field";
     private static final String GRID_SLOT_NAME = "grid";
     private static final String FILTER_SLOT_NAME = "filter";
@@ -59,14 +60,19 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
     private LookupFieldI18n i18n;
     private Grid<T> grid;
     protected ComboboxT comboBox;
-    private ConfigurableFilterDataProvider<T, Void, String> gridDataProvider;
-    private LookupFieldFilter<String> filter;
+    private ConfigurableFilterDataProvider<T, Void, FilterType> gridDataProvider;
+    private LookupFieldFilter<FilterType> filter;
     private Component header;
     private Component footer;
     private Runnable notificationWhenEmptySelection;
+    protected final SerializableFunction<String, FilterType> filterConverter;
+    protected final SerializableFunction<FilterType, String> invertedFilterConverter;
 
-    public AbstractLookupField() {
+    public AbstractLookupField(SerializableFunction<String, FilterType> filterConverter
+            ,SerializableFunction<FilterType, String> invertedFilterConverter) {
         super();
+        this.filterConverter = filterConverter;
+        this.invertedFilterConverter = invertedFilterConverter;
     }
 
     /**
@@ -143,9 +149,9 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
 
     @Override
     public <C> void setDataProvider(DataProvider<T, C> dataProvider,
-                                    SerializableFunction<String, C> filterConverter) {
+                                    SerializableFunction<FilterType, C> filterConverter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
-        comboBox.setDataProvider(dataProvider, filterConverter);
+        comboBox.setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
         gridDataProvider = dataProvider.withConvertedFilter(filterConverter).withConfigurableFilter();
         grid.setDataProvider(gridDataProvider);
     }
@@ -177,7 +183,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
     private void filterGrid(String filter) {
         // don't filter the grid if the filter is custom
         if (filter != null && this.filter == null) {
-            gridDataProvider.setFilter(filter);
+            filterServerGrid(filterConverter.apply(filter));
         }
     }
 
@@ -423,7 +429,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
      *
      * @param filter custom filter
      */
-    public void setFilter(LookupFieldFilter<String> filter) {
+    public void setFilter(LookupFieldFilter<FilterType> filter) {
         Objects.requireNonNull(filter, "Filter cannot be null");
         Objects.requireNonNull(filter.getComponent(), "Filter component cannot be null");
 
@@ -434,7 +440,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
         this.filter = filter;
         filter.getComponent().getElement().setAttribute(SLOT_KEY, FILTER_SLOT_NAME);
         filter.setFilterAction(value -> {
-            ComponentUtil.fireEvent(this, new AbstractLookupField.FilterEvent<String>(this, false, value));
+            ComponentUtil.fireEvent(this, new AbstractLookupField.FilterEvent<>(this, false, value));
         });
 
         if (filterRegistration != null) {
@@ -451,7 +457,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
         }
     }
 
-    private void filterServerGrid(String filter) {
+    private void filterServerGrid(FilterType filter) {
         gridDataProvider.setFilter(filter);
     }
 
@@ -527,7 +533,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
      * @return a handle that can be used for removing the listener
      */
     @SuppressWarnings("unchecked")
-    public Registration addFilterListener(ComponentEventListener<FilterEvent<String>> listener) {
+    public Registration addFilterListener(ComponentEventListener<FilterEvent<FilterType>> listener) {
         return addListener(FilterEvent.class, (ComponentEventListener) listener);
     }
 
