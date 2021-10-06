@@ -19,7 +19,7 @@
     </organization>
 
     <properties>
-        <vaadin.version>14.5.3</vaadin.version>
+        <vaadin.version>14.7.1</vaadin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -105,6 +105,11 @@
             <groupId>com.vaadin.componentfactory</groupId>
             <artifactId>enhanced-dialog</artifactId>
             <version>1.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.gatanaso</groupId>
+            <artifactId>multiselect-combo-box-flow</artifactId>
+            <version>3.0.2</version>
         </dependency>
     </dependencies>
 

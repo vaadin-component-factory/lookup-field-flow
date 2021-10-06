@@ -20,43 +20,82 @@ package com.vaadin.componentfactory.lookupfield;
  * #L%
  */
 
+import com.vaadin.componentfactory.EnhancedDialog;
+import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.component.dependency.Uses;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.HasFilterableDataProvider;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.function.SerializableConsumer;
+import com.vaadin.flow.function.SerializableFunction;
+import com.vaadin.flow.internal.JsonSerializer;
 import com.vaadin.flow.shared.Registration;
+import elemental.json.JsonObject;
+import org.vaadin.gatanaso.MultiselectComboBox;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class LookupField<T> extends AbstractLookupField<T, T, ComboBox<T>, LookupField<T>> implements HasHelper {
+/**
+ * Server-side component for the {@code vcf-lookup-field} webcomponent.
+ *
+ * The LookupField is a combination of a combobox and a dialog for advanced search.
+ *
+ *
+ * @param <T> the type of the items to be inserted in the combo box
+ */
 
-    public LookupField() {
-        this(new Grid<>(), new ComboBox<>());
+public class MultiSelectLookupField<T> extends AbstractLookupField<T, Set<T>, MultiselectComboBox<T>, MultiSelectLookupField<T>> {
+
+    public MultiSelectLookupField() {
+        this(new Grid<>(), new MultiselectComboBox<>());
     }
 
-    public LookupField(Class<T> beanType) {
-        this(new Grid<>(beanType), new ComboBox<>());
+    public MultiSelectLookupField(Class<T> beanType) {
+        this(new Grid<>(beanType), new MultiselectComboBox<>());
     }
 
-    public LookupField(Grid<T> grid, ComboBox<T> comboBox) {
+    public MultiSelectLookupField(Grid<T> grid, MultiselectComboBox<T> comboBox) {
         super();
         setGrid(grid);
         setComboBox(comboBox);
     }
 
+    @Override
+    public void setGrid(Grid<T> grid) {
+        super.setGrid(grid);
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+    }
 
     @Override
-    public void setValue(T value) {
+    public void setValue(Set<T> value) {
         comboBox.setValue(value);
     }
 
     @Override
-    public T getValue() {
+    public Set<T> getValue() {
         return comboBox.getValue();
     }
 
     @Override
-    public Registration addValueChangeListener(ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<LookupField<T>, T>> listener) {
+    public Registration addValueChangeListener(ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<MultiSelectLookupField<T>, Set<T>>> listener) {
         return comboBox.addValueChangeListener((ValueChangeListener) listener);
     }
 
@@ -66,14 +105,17 @@ public class LookupField<T> extends AbstractLookupField<T, T, ComboBox<T>, Looku
      *
      * @param comboBox the comboBox
      */
-    public void setComboBox(ComboBox<T> comboBox) {
+    public void setComboBox(MultiselectComboBox<T> comboBox) {
         Objects.requireNonNull(comboBox, "ComboBox cannot be null");
 
         if (this.comboBox != null && this.comboBox.getElement().getParent() == getElement()) {
             this.comboBox.getElement().removeFromParent();
         }
         comboBox.setClearButtonVisible(true);
-        comboBox.setAllowCustomValue(true);
+        comboBox.setClearButtonVisible(true);
+        comboBox.setAllowCustomValues(true);
+        comboBox.setCompactMode(true);
+        //comboBox.setAllowCustomValue(true);
 
         this.comboBox = comboBox;
         comboBox.getElement().setAttribute(SLOT_KEY, FIELD_SLOT_NAME);
@@ -87,7 +129,7 @@ public class LookupField<T> extends AbstractLookupField<T, T, ComboBox<T>, Looku
     /**
      * @return the internal field
      */
-    public ComboBox<T> getComboBox() {
+    public MultiselectComboBox<T> getComboBox() {
         return comboBox;
     }
 
@@ -133,43 +175,27 @@ public class LookupField<T> extends AbstractLookupField<T, T, ComboBox<T>, Looku
      *
      * @param label label of the field
      */
+    @Override
     public void setLabel(String label) {
         comboBox.setLabel(label);
-    }
-
-
-    @Override
-    public String getHelperText() {
-        return comboBox.getHelperText();
-    }
-
-    @Override
-    public void setHelperText(String helperText) {
-        comboBox.setHelperText(helperText);
-    }
-
-    @Override
-    public void setHelperComponent(Component component) {
-        comboBox.setHelperComponent(component);
-    }
-
-    @Override
-    public Component getHelperComponent() {
-        return comboBox.getHelperComponent();
     }
     /**
      * Copy the selected value of the grid into the field
      */
+    @Override
     @ClientCallable
     protected void copyFieldValueFromGrid() {
-        getGrid().getSelectedItems().stream().findFirst().ifPresent(comboBox::setValue);
+        comboBox.setValue(getGrid().getSelectedItems());
     }
 
     /**
      * Copy the selected value of the field into the grid
      */
+    @Override
     @ClientCallable
     protected void copyFieldValueToGrid() {
-        getGrid().select(comboBox.getValue());
+        for (T value : comboBox.getValue()) {
+            getGrid().select(value);
+        }
     }
 }
