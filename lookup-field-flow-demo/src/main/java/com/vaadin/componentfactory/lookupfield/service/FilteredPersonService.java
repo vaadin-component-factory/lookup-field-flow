@@ -2,6 +2,7 @@ package com.vaadin.componentfactory.lookupfield.service;
 
 import com.vaadin.componentfactory.lookupfield.bean.Person;
 import com.vaadin.componentfactory.lookupfield.bean.PersonFilter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,21 +22,14 @@ public class FilteredPersonService {
 
     private boolean filter(Person person, PersonFilter filter) {
         boolean result = true;
-        if (filter == null || (filter.getLastName() == null && filter.getFirstName() == null)) {
-            return result;
+        if (filter == null || (StringUtils.isEmpty(filter.getLastName()) && StringUtils.isEmpty(filter.getFirstName()))) {
+            return true;
         }
-        if (filter.getLastName() != null) {
-            if (person.getLastName().contains(filter.getLastName())) {
-                return true;
-            }
+        if ((StringUtils.isEmpty(filter.getLastName()) && StringUtils.isEmpty(filter.getFirstName()))) {
+            return person.toString().contains(filter.getFullName());
+        } else {
+            return person.getLastName().contains(filter.getLastName()) && person.getFirstName().contains(filter.getFirstName());
         }
-
-        if (filter.getFirstName() != null) {
-            if (person.getFirstName().contains(filter.getLastName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public int count(PersonFilter filter) {

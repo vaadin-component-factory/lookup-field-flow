@@ -20,15 +20,19 @@ package com.vaadin.componentfactory.lookupfield;
  * #L%
  */
 
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.HasHelper;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.SerializableFunction;
-import com.vaadin.flow.shared.Registration;
 
-import java.util.Objects;
-
+/**
+ * Server-side component for the {@code vcf-lookup-field} webcomponent.
+ *
+ * The LookupField is a combination of a combobox and a dialog for advanced search.
+ *
+ *
+ * @param <T> the type of the items to be inserted in the combo box
+ */
 public class LookupField<T> extends CustomFilterLookupField<T, String> implements HasHelper {
 
     public LookupField() {

@@ -25,21 +25,11 @@ import com.vaadin.flow.shared.Registration;
 import elemental.json.JsonObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Server-side component for the {@code vcf-lookup-field} webcomponent.
- *
- * The LookupField is a combination of a combobox and a dialog for advanced search.
- *
- *
- * @param <T> the type of the items to be inserted in the combo box
- */
 @Uses(value = Icon.class)
 @Uses(value = TextField.class)
 @Uses(value = Button.class)

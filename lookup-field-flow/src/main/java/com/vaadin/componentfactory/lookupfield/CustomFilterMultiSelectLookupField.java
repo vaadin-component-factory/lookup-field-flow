@@ -20,24 +20,29 @@ package com.vaadin.componentfactory.lookupfield;
  * #L%
  */
 
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.ClientCallable;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.shared.Registration;
+import org.vaadin.gatanaso.MultiselectComboBox;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Server-side component for the {@code vcf-lookup-field} webcomponent.
  *
- * The CustomFilterLookupField is a combination of a combobox and a dialog for advanced search.
+ * The LookupField is a combination of a combobox and a dialog for advanced search.
  *
- * @param <T> the type of the items to be inserted in the combo box and grid
- * @param <FilterType> Type of the filter
+ *
+ * @param <T> the type of the items to be inserted in the combo box
  */
-public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<T, T, ComboBox<T>, CustomFilterLookupField<T, FilterType>, FilterType> implements HasHelper {
+
+public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractLookupField<T, Set<T>, MultiselectComboBox<T>, CustomFilterMultiSelectLookupField<T, FilterType>, FilterType> {
 
     /**
      * Constructor
@@ -47,62 +52,68 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
      * @param filterConverter Convert a string to FilterType
      * @param invertedFilterConverter Convert a FilterType to String
      */
-    public CustomFilterLookupField(
+    public CustomFilterMultiSelectLookupField(
             SerializableFunction<String, FilterType> filterConverter
             ,SerializableFunction<FilterType, String> invertedFilterConverter) {
-        this(new Grid<>(), new ComboBox<>(), filterConverter, invertedFilterConverter);
+        this(new Grid<>(), new MultiselectComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
-    public CustomFilterLookupField(Class<T> beanType,
+    public CustomFilterMultiSelectLookupField(Class<T> beanType,
                                    SerializableFunction<String, FilterType> filterConverter
             ,SerializableFunction<FilterType, String> invertedFilterConverter) {
-        this(new Grid<>(beanType), new ComboBox<>(), filterConverter, invertedFilterConverter);
+        this(new Grid<>(beanType), new MultiselectComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
-    public CustomFilterLookupField(Grid<T> grid, ComboBox<T> comboBox,
-                                     SerializableFunction<String, FilterType> filterConverter
-                                    ,SerializableFunction<FilterType, String> invertedFilterConverter) {
+    public CustomFilterMultiSelectLookupField(Grid<T> grid, MultiselectComboBox<T> comboBox,
+                                   SerializableFunction<String, FilterType> filterConverter
+            ,SerializableFunction<FilterType, String> invertedFilterConverter) {
         super(filterConverter, invertedFilterConverter);
         setGrid(grid);
         setComboBox(comboBox);
     }
 
     @Override
-    public void setValue(T value) {
+    public void setGrid(Grid<T> grid) {
+        super.setGrid(grid);
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+    }
+
+    @Override
+    public void setValue(Set<T> value) {
         comboBox.setValue(value);
     }
 
     @Override
-    public T getValue() {
+    public Set<T> getValue() {
         return comboBox.getValue();
     }
 
     @Override
-    public Registration addValueChangeListener(ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<CustomFilterLookupField<T, FilterType>, T>> listener) {
-        return comboBox.addValueChangeListener((ValueChangeListener)listener);
+    public Registration addValueChangeListener(ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<CustomFilterMultiSelectLookupField<T, FilterType>, Set<T>>> listener) {
+        return comboBox.addValueChangeListener((ValueChangeListener) listener);
     }
+
 
     /**
      * Set the comboBox
      *
      * @param comboBox the comboBox
      */
-    public void setComboBox(ComboBox<T> comboBox) {
+    public void setComboBox(MultiselectComboBox<T> comboBox) {
         Objects.requireNonNull(comboBox, "ComboBox cannot be null");
 
         if (this.comboBox != null && this.comboBox.getElement().getParent() == getElement()) {
             this.comboBox.getElement().removeFromParent();
         }
         comboBox.setClearButtonVisible(true);
-        comboBox.setAllowCustomValue(true);
-        comboBox.addCustomValueSetListener(e -> {
-           getElement().setProperty("_filterdata", e.getDetail());
+        comboBox.setAllowCustomValues(true);
+        comboBox.addCustomValuesSetListener(e -> {
+            getElement().setProperty("_filterdata", e.getDetail());
+        });
+        comboBox.addValueChangeListener(e -> {
+            getElement().setProperty("_filterdata", "");
         });
 
-        comboBox.addValueChangeListener(e -> {
-            String value = (e.getValue() == null)? "":comboBox.getItemLabelGenerator().apply(e.getValue());
-            getElement().setProperty("_filterdata", value);
-        });
         this.comboBox = comboBox;
         comboBox.getElement().setAttribute(SLOT_KEY, FIELD_SLOT_NAME);
 
@@ -115,7 +126,7 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
     /**
      * @return the internal field
      */
-    public ComboBox<T> getComboBox() {
+    public MultiselectComboBox<T> getComboBox() {
         return comboBox;
     }
 
@@ -161,43 +172,27 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
      *
      * @param label label of the field
      */
+    @Override
     public void setLabel(String label) {
         comboBox.setLabel(label);
-    }
-
-
-    @Override
-    public String getHelperText() {
-        return comboBox.getHelperText();
-    }
-
-    @Override
-    public void setHelperText(String helperText) {
-        comboBox.setHelperText(helperText);
-    }
-
-    @Override
-    public void setHelperComponent(Component component) {
-        comboBox.setHelperComponent(component);
-    }
-
-    @Override
-    public Component getHelperComponent() {
-        return comboBox.getHelperComponent();
     }
     /**
      * Copy the selected value of the grid into the field
      */
+    @Override
     @ClientCallable
     protected void copyFieldValueFromGrid() {
-        getGrid().getSelectedItems().stream().findFirst().ifPresent(comboBox::setValue);
+        comboBox.setValue(getGrid().getSelectedItems());
     }
 
     /**
      * Copy the selected value of the field into the grid
      */
+    @Override
     @ClientCallable
     protected void copyFieldValueToGrid() {
-        getGrid().select(comboBox.getValue());
+        for (T value : comboBox.getValue()) {
+            getGrid().select(value);
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.vaadin.componentfactory.lookupfield;
 
 /**
- * @author jcgueriaud
+ * Filter action
  */
 @FunctionalInterface
 public interface LookupFieldFilterAction<T> {
