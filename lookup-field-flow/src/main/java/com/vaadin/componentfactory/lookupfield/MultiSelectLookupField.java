@@ -20,10 +20,9 @@ package com.vaadin.componentfactory.lookupfield;
  * #L%
  */
 
-import com.vaadin.flow.component.HasHelper;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.function.SerializableFunction;
+import org.vaadin.gatanaso.MultiselectComboBox;
 
 /**
  * Server-side component for the {@code vcf-lookup-field} webcomponent.
@@ -33,17 +32,19 @@ import com.vaadin.flow.function.SerializableFunction;
  *
  * @param <T> the type of the items to be inserted in the combo box
  */
-public class LookupField<T> extends CustomFilterLookupField<T, String> implements HasHelper {
 
-    public LookupField() {
-        this(new Grid<>(), new ComboBox<>());
+public class MultiSelectLookupField<T> extends CustomFilterMultiSelectLookupField<T, String> {
+
+    public MultiSelectLookupField() {
+        this(new Grid<>(), new MultiselectComboBox<>());
     }
 
-    public LookupField(Class<T> beanType) {
-        this(new Grid<>(beanType), new ComboBox<>());
+    public MultiSelectLookupField(Class<T> beanType) {
+        this(new Grid<>(beanType), new MultiselectComboBox<>());
     }
 
-    public LookupField(Grid<T> grid, ComboBox<T> comboBox) {
-        super(grid, comboBox,SerializableFunction.identity(), SerializableFunction.identity());
+    public MultiSelectLookupField(Grid<T> grid, MultiselectComboBox<T> comboBox) {
+        super(grid, comboBox, SerializableFunction.identity(), SerializableFunction.identity());
     }
+
 }

@@ -16,8 +16,13 @@ public class MainLayout extends AppLayout {
         final RouterLink binderView = new RouterLink("Binder example", BinderView.class);
         final RouterLink customHeader = new RouterLink("Custom Header", CustomHeaderView.class);
         final RouterLink enableSelectButtonView = new RouterLink("Selection Button enabled", EnableSelectButtonView.class);
+        final RouterLink enableMultipleButtonView = new RouterLink("Multiselect", MultipleView.class);
+        final RouterLink createView = new RouterLink("Create", CreateItemView.class);
+        final RouterLink customFilterView = new RouterLink("CustomFilter", CustomFilterView.class);
+        final RouterLink customFilterTypeView = new RouterLink("Filter Person", CustomFilterTypeView.class);
         final VerticalLayout menuLayout = new VerticalLayout(personLookupField, simple, personLabelLookupField, i18nView,
-                binderView, customHeader, enableSelectButtonView);
+                binderView, customHeader, enableSelectButtonView, enableMultipleButtonView, createView, customFilterView,
+                customFilterTypeView);
         addToDrawer(menuLayout);
         addToNavbar(drawerToggle);
     }
