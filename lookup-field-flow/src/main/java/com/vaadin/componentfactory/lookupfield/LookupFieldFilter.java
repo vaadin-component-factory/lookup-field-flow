@@ -5,11 +5,13 @@ import com.vaadin.flow.component.Component;
 /**
  * Class for the custom filter component
  * The component need to call manually the filter action. For example
- * filterButton.addClickListener(e -> {
+ * <pre>
+ * filterButton.addClickListener(e -&#62; {
  *    if (fieldFilterAction != null) {
  *       fieldFilterAction.filter(new FILTERTYPE);
  *    }
  * });
+ * </pre>
  */
 public interface LookupFieldFilter<FILTERTYPE> {
 
