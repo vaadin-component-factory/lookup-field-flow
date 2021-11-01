@@ -10,6 +10,7 @@ import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridMultiSelectionModel;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
@@ -36,7 +37,7 @@ import java.util.stream.Stream;
 @Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.2.0")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.3.1")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValidation & HasSize & HasFilterableDataProvider<T, String> & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T,SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
         implements HasFilterableDataProvider<T, FilterType>,
@@ -78,6 +79,16 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
         }
 
         this.grid = grid;
+        this.grid.addItemClickListener(e -> {
+            if (grid.getSelectionModel() instanceof GridMultiSelectionModel) {
+                if (!grid.getSelectedItems().contains(e.getItem())) {
+                    this.grid.deselectAll();
+                    this.grid.select(e.getItem());
+                } else {
+                    this.grid.deselectAll();
+                }
+            }
+        });
         grid.getElement().setAttribute(SLOT_KEY, GRID_SLOT_NAME);
 
         // It might already have a parent e.g when injected from a template
@@ -576,6 +587,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
         private String search;
         private String emptyselection;
         private String create;
+        private String selectedText;
 
         public String getSearch() {
             return search;
@@ -646,6 +658,15 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
 
         public LookupFieldI18n setCreate(String create) {
             this.create = create;
+            return this;
+        }
+
+        public String getSelectedText() {
+            return selectedText;
+        }
+
+        public LookupFieldI18n setSelectedText(String selectedText) {
+            this.selectedText = selectedText;
             return this;
         }
     }

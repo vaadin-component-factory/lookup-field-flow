@@ -22,6 +22,7 @@ public class MultipleView extends Div {
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
         lookupField.setLabel("Item selector");
         lookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
+        lookupField.showSelectedItems(true);
         add(lookupField);
     }
 
