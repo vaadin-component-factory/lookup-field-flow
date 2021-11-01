@@ -24,12 +24,15 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.shared.Registration;
 import org.vaadin.gatanaso.MultiselectComboBox;
 
+import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.Set;
 
@@ -42,7 +45,14 @@ import java.util.Set;
  * @param <T> the type of the items to be inserted in the combo box
  */
 
+@CssImport(value = "./lookup-dialog-overlay.css")
 public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractLookupField<T, Set<T>, MultiselectComboBox<T>, CustomFilterMultiSelectLookupField<T, FilterType>, FilterType> {
+
+    private static final String SELECTED_SLOT_NAME = "selected";
+
+    private Div selected;
+
+    private Registration selectedListener;
 
     /**
      * Constructor
@@ -191,8 +201,48 @@ public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractL
     @Override
     @ClientCallable
     protected void copyFieldValueToGrid() {
+        getGrid().deselectAll();
         for (T value : comboBox.getValue()) {
             getGrid().select(value);
         }
     }
+
+    /**
+     *
+     *
+     * @param showSelectedItems
+     */
+    public void showSelectedItems(boolean showSelectedItems) {
+        if (this.selected != null && this.selected.getElement().getParent() == getElement()) {
+            this.selected.getElement().removeFromParent();
+        }
+        if (showSelectedItems) {
+            this.selected = new Div();
+            this.selected.addClassName("selected-text");
+            if (selectedListener != null) {
+                selectedListener.remove();
+            }
+            selectedListener = getGrid().addSelectionListener(item -> {
+                updateMessage(item.getAllSelectedItems().size());
+            });
+
+            updateMessage(getGrid().getSelectedItems().size());
+            selected.getElement().setAttribute(SLOT_KEY, SELECTED_SLOT_NAME);
+
+            // It might already have a parent e.g when injected from a template
+            if (selected.getElement().getParent() == null) {
+                getElement().appendChild(selected.getElement());
+            }
+        } else {
+            this.selected = null;
+        }
+    }
+
+    private void updateMessage(int nbItems) {
+        String message = (getI18n() != null && getI18n().getSelectedText() != null)? getI18n().getSelectedText(): "{0} item(s) selected";
+        if (selected != null) {
+            this.selected.setText(MessageFormat.format(message, nbItems));
+        }
+    }
+
 }

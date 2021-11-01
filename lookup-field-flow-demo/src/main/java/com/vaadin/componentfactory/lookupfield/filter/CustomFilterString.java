@@ -19,6 +19,8 @@ public class CustomFilterString implements LookupFieldFilter<String> {
     private LookupFieldFilterAction<String> fieldFilterAction;
 
     public CustomFilterString() {
+        layout.setSpacing(false);
+        layout.getThemeList().add("spacing-s");
         layout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         filterField = new TextField("filter");
         layout.addAndExpand(filterField);

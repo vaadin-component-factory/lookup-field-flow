@@ -5,6 +5,7 @@ import com.vaadin.componentfactory.lookupfield.bean.PersonFilter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class FilteredPersonService {
@@ -26,9 +27,9 @@ public class FilteredPersonService {
             return true;
         }
         if ((StringUtils.isEmpty(filter.getLastName()) && StringUtils.isEmpty(filter.getFirstName()))) {
-            return person.toString().contains(filter.getFullName());
+            return person.toString().toLowerCase(Locale.ROOT).contains(filter.getFullName().toLowerCase(Locale.ROOT));
         } else {
-            return person.getLastName().contains(filter.getLastName()) && person.getFirstName().contains(filter.getFirstName());
+            return person.getLastName().toLowerCase(Locale.ROOT).contains(filter.getLastName().toLowerCase(Locale.ROOT)) && person.getFirstName().toLowerCase(Locale.ROOT).contains(filter.getFirstName().toLowerCase(Locale.ROOT));
         }
     }
 
