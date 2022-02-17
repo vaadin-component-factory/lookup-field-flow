@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
 @NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.3.1")
-public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValidation & HasSize & HasFilterableDataProvider<T, String> & HasValue<?, SelectT>,
+public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T,SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
         implements HasFilterableDataProvider<T, FilterType>,
         HasValueAndElement<AbstractField.ComponentValueChangeEvent<ComponentT, SelectT>, SelectT>, HasValidation, HasSize, HasTheme {
@@ -152,7 +152,14 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
     public <C> void setDataProvider(DataProvider<T, C> dataProvider,
                                     SerializableFunction<FilterType, C> filterConverter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
-        comboBox.setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
+        if(comboBox instanceof HasFilterableDataProvider) {
+            ((HasFilterableDataProvider<T, String>)comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
+        } else if(comboBox instanceof ComboBox) {
+            ((ComboBox<T>)comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
+        } else {
+            throw new RuntimeException("Invalid object passed to the LookupField -> Must be either ComboBox or MultiSelectComboBox");
+        }
+
         gridDataProvider = dataProvider.withConvertedFilter(filterConverter).withConfigurableFilter();
         grid.setDataProvider(gridDataProvider);
     }
