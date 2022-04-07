@@ -1,7 +1,9 @@
 package com.vaadin.componentfactory.lookupfield;
 
 import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 
