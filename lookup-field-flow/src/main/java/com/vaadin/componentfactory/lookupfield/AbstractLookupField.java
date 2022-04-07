@@ -37,8 +37,8 @@ import java.util.stream.Stream;
 @Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.3.1")
-public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValidation & HasSize & HasFilterableDataProvider<T, String> & HasValue<?, SelectT>,
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "1.3.3")
+public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasFilterableDataProvider<T, String> & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T,SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
         implements HasFilterableDataProvider<T, FilterType>,
         HasValueAndElement<AbstractField.ComponentValueChangeEvent<ComponentT, SelectT>, SelectT>, HasValidation, HasSize, HasTheme {
@@ -361,18 +361,6 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-
-
-    @Override
-    public boolean isInvalid() {
-        return comboBox.isInvalid();
-    }
-
-    @Override
-    public void setInvalid(boolean invalid) {
-        comboBox.setInvalid(invalid);
-    }
-
     @Override
     public void setErrorMessage(String errorMessage) {
         comboBox.setErrorMessage(errorMessage);
@@ -573,6 +561,29 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasValid
         public CreateItemEvent(AbstractLookupField source, boolean fromClient) {
             super(source, fromClient);
         }
+    }
+
+    @Override
+    public boolean isInvalid() {
+        return comboBox.isInvalid();
+    }
+
+    @Override
+    public void setInvalid(boolean invalid) {
+        this.getElement().setProperty("invalid", invalid);
+        comboBox.setInvalid(invalid);
+    }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        HasValueAndElement.super.setReadOnly(readOnly);
+        comboBox.setReadOnly(readOnly);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        comboBox.setEnabled(enabled);
+        super.setEnabled(enabled);
     }
 
     /**
