@@ -20,9 +20,10 @@ public class MainLayout extends AppLayout {
         final RouterLink createView = new RouterLink("Create", CreateItemView.class);
         final RouterLink customFilterView = new RouterLink("CustomFilter", CustomFilterView.class);
         final RouterLink customFilterTypeView = new RouterLink("Filter Person", CustomFilterTypeView.class);
+        final RouterLink statesView = new RouterLink("Different states", StatesView.class);
         final VerticalLayout menuLayout = new VerticalLayout(personLookupField, simple, personLabelLookupField, i18nView,
                 binderView, customHeader, enableSelectButtonView, enableMultipleButtonView, createView, customFilterView,
-                customFilterTypeView);
+                customFilterTypeView, statesView);
         addToDrawer(menuLayout);
         addToNavbar(drawerToggle);
     }
