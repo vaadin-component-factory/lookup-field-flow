@@ -106,11 +106,6 @@
             <artifactId>enhanced-dialog</artifactId>
             <version>23.1.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.vaadin.gatanaso</groupId>
-            <artifactId>multiselect-combo-box-flow</artifactId>
-            <version>4.0.0-rc2</version>
-        </dependency>
     </dependencies>
 
     <build>

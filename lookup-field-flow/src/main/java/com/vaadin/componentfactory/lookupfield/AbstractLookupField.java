@@ -5,6 +5,7 @@ import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dependency.Uses;
@@ -152,8 +153,8 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     public <C> void setDataProvider(DataProvider<T, C> dataProvider,
                                     SerializableFunction<FilterType, C> filterConverter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
-        if(comboBox instanceof HasFilterableDataProvider) {
-            ((HasFilterableDataProvider<T, String>)comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
+        if(comboBox instanceof MultiSelectComboBox) {
+            ((MultiSelectComboBox<T>)comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
         } else if(comboBox instanceof ComboBox) {
             ((ComboBox<T>)comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
         } else {

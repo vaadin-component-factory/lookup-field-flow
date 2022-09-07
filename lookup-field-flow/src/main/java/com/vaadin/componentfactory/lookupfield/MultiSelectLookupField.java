@@ -21,8 +21,9 @@ package com.vaadin.componentfactory.lookupfield;
  */
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.function.SerializableFunction;
-import org.vaadin.gatanaso.MultiselectComboBox;
+
 
 /**
  * Server-side component for the {@code vcf-lookup-field} webcomponent.
@@ -36,14 +37,14 @@ import org.vaadin.gatanaso.MultiselectComboBox;
 public class MultiSelectLookupField<T> extends CustomFilterMultiSelectLookupField<T, String> {
 
     public MultiSelectLookupField() {
-        this(new Grid<>(), new MultiselectComboBox<>());
+        this(new Grid<>(), new MultiSelectComboBox<>());
     }
 
     public MultiSelectLookupField(Class<T> beanType) {
-        this(new Grid<>(beanType), new MultiselectComboBox<>());
+        this(new Grid<>(beanType), new MultiSelectComboBox<>());
     }
 
-    public MultiSelectLookupField(Grid<T> grid, MultiselectComboBox<T> comboBox) {
+    public MultiSelectLookupField(Grid<T> grid, MultiSelectComboBox<T> comboBox) {
         super(grid, comboBox, SerializableFunction.identity(), SerializableFunction.identity());
     }
 
