@@ -24,13 +24,13 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.shared.Registration;
-import org.vaadin.gatanaso.MultiselectComboBox;
 
 import java.text.MessageFormat;
 import java.util.Objects;
@@ -46,7 +46,7 @@ import java.util.Set;
  */
 
 @CssImport(value = "./lookup-dialog-overlay.css")
-public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractLookupField<T, Set<T>, MultiselectComboBox<T>, CustomFilterMultiSelectLookupField<T, FilterType>, FilterType> {
+public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractLookupField<T, Set<T>, MultiSelectComboBox<T>, CustomFilterMultiSelectLookupField<T, FilterType>, FilterType> {
 
     private static final String SELECTED_SLOT_NAME = "selected";
 
@@ -65,16 +65,16 @@ public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractL
     public CustomFilterMultiSelectLookupField(
             SerializableFunction<String, FilterType> filterConverter
             ,SerializableFunction<FilterType, String> invertedFilterConverter) {
-        this(new Grid<>(), new MultiselectComboBox<>(), filterConverter, invertedFilterConverter);
+        this(new Grid<>(), new MultiSelectComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
     public CustomFilterMultiSelectLookupField(Class<T> beanType,
                                    SerializableFunction<String, FilterType> filterConverter
             ,SerializableFunction<FilterType, String> invertedFilterConverter) {
-        this(new Grid<>(beanType), new MultiselectComboBox<>(), filterConverter, invertedFilterConverter);
+        this(new Grid<>(beanType), new MultiSelectComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
-    public CustomFilterMultiSelectLookupField(Grid<T> grid, MultiselectComboBox<T> comboBox,
+    public CustomFilterMultiSelectLookupField(Grid<T> grid, MultiSelectComboBox<T> comboBox,
                                    SerializableFunction<String, FilterType> filterConverter
             ,SerializableFunction<FilterType, String> invertedFilterConverter) {
         super(filterConverter, invertedFilterConverter);
@@ -109,15 +109,15 @@ public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractL
      *
      * @param comboBox the comboBox
      */
-    public void setComboBox(MultiselectComboBox<T> comboBox) {
+    public void setComboBox(MultiSelectComboBox<T> comboBox) {
         Objects.requireNonNull(comboBox, "ComboBox cannot be null");
 
         if (this.comboBox != null && this.comboBox.getElement().getParent() == getElement()) {
             this.comboBox.getElement().removeFromParent();
         }
         comboBox.setClearButtonVisible(true);
-        comboBox.setAllowCustomValues(true);
-        comboBox.addCustomValuesSetListener(e -> {
+        comboBox.setAllowCustomValue(true);
+        comboBox.addCustomValueSetListener(e -> {
             getElement().setProperty("_filterdata", e.getDetail());
         });
         comboBox.addValueChangeListener(e -> {
@@ -136,7 +136,7 @@ public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractL
     /**
      * @return the internal field
      */
-    public MultiselectComboBox<T> getComboBox() {
+    public MultiSelectComboBox<T> getComboBox() {
         return comboBox;
     }
 
