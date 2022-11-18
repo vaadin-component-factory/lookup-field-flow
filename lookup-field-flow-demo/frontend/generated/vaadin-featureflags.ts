@@ -7,6 +7,6 @@ window.Vaadin.featureFlags.hillaPush = false;
 window.Vaadin.featureFlags.hillaEngine = false;
 window.Vaadin.featureFlags.oldLicenseChecker = false;
 window.Vaadin.featureFlags.collaborationEngineBackend = false;
-window.Vaadin.featureFlags.webpackForFrontendBuild = false;
+window.Vaadin.featureFlags.webpackForFrontendBuild = true;
 window.Vaadin.featureFlags.enforceFieldValidation = false;
 export {};
