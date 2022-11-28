@@ -20,21 +20,27 @@ package com.vaadin.componentfactory.lookupfield;
  * #L%
  */
 
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.ClientCallable;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasHelper;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.shared.Registration;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Server-side component for the {@code vcf-lookup-field} webcomponent.
- *
+ * <p>
  * The CustomFilterLookupField is a combination of a combobox and a dialog for advanced search.
  *
- * @param <T> the type of the items to be inserted in the combo box and grid
+ * @param <T>          the type of the items to be inserted in the combo box and grid
  * @param <FilterType> Type of the filter
  */
 public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<T, T, ComboBox<T>, CustomFilterLookupField<T, FilterType>, FilterType> implements HasHelper {
@@ -44,24 +50,24 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
      * The converters are used to convert the backend filter to the combobox filter (String)
      * or if you are using setItems
      *
-     * @param filterConverter Convert a string to FilterType
+     * @param filterConverter         Convert a string to FilterType
      * @param invertedFilterConverter Convert a FilterType to String
      */
     public CustomFilterLookupField(
             SerializableFunction<String, FilterType> filterConverter
-            ,SerializableFunction<FilterType, String> invertedFilterConverter) {
+            , SerializableFunction<FilterType, String> invertedFilterConverter) {
         this(new Grid<>(), new ComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
     public CustomFilterLookupField(Class<T> beanType,
                                    SerializableFunction<String, FilterType> filterConverter
-            ,SerializableFunction<FilterType, String> invertedFilterConverter) {
+            , SerializableFunction<FilterType, String> invertedFilterConverter) {
         this(new Grid<>(beanType), new ComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
     public CustomFilterLookupField(Grid<T> grid, ComboBox<T> comboBox,
-                                     SerializableFunction<String, FilterType> filterConverter
-                                    ,SerializableFunction<FilterType, String> invertedFilterConverter) {
+                                   SerializableFunction<String, FilterType> filterConverter
+            , SerializableFunction<FilterType, String> invertedFilterConverter) {
         super(filterConverter, invertedFilterConverter);
         setGrid(grid);
         setComboBox(comboBox);
@@ -79,7 +85,7 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
 
     @Override
     public Registration addValueChangeListener(ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<CustomFilterLookupField<T, FilterType>, T>> listener) {
-        return comboBox.addValueChangeListener((ValueChangeListener)listener);
+        return comboBox.addValueChangeListener((ValueChangeListener) listener);
     }
 
     /**
@@ -96,11 +102,11 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
         comboBox.setClearButtonVisible(true);
         comboBox.setAllowCustomValue(true);
         comboBox.addCustomValueSetListener(e -> {
-           getElement().setProperty("_filterdata", e.getDetail());
+            getElement().setProperty("_filterdata", e.getDetail());
         });
 
         comboBox.addValueChangeListener(e -> {
-            String value = (e.getValue() == null)? "":comboBox.getItemLabelGenerator().apply(e.getValue());
+            String value = (e.getValue() == null) ? "" : comboBox.getItemLabelGenerator().apply(e.getValue());
             getElement().setProperty("_filterdata", value);
         });
         this.comboBox = comboBox;
@@ -145,6 +151,7 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
         setDataProvider(listDataProvider,
                 filterText -> item -> itemFilter.test(item, invertedFilterConverter.apply(filterText)));
     }
+
     /**
      * Sets the item label generator that is used to produce the strings shown
      * in the combo box for each item. By default,
@@ -156,6 +163,7 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
     public void setItemLabelGenerator(ItemLabelGenerator<T> itemLabelGenerator) {
         comboBox.setItemLabelGenerator(itemLabelGenerator);
     }
+
     /**
      * Set the label of the field
      *
@@ -185,12 +193,34 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
     public Component getHelperComponent() {
         return comboBox.getHelperComponent();
     }
+
     /**
      * Copy the selected value of the grid into the field
      */
     @ClientCallable
     protected void copyFieldValueFromGrid() {
-        getGrid().getSelectedItems().stream().findFirst().ifPresent(comboBox::setValue);
+        Set<T> selectedItems = getGrid().getSelectedItems();
+        if (!selectedItems.isEmpty()) {
+            getGrid().getSelectedItems().stream().findFirst().ifPresent(comboBox::setValue);
+            getElement().callJsFunction("__close");
+            return;
+        }
+        String noSelectionNotificationMessage = null;
+        if (getI18n() != null) {
+          noSelectionNotificationMessage = getI18n().getEmptyselection();
+        }
+        boolean hasNoSelectionMessage = noSelectionNotificationMessage != null
+                && (!noSelectionNotificationMessage.isEmpty());
+        if (hasNoSelectionMessage) {
+            showNoSelectionNotification(noSelectionNotificationMessage);
+        } else {
+            getElement().callJsFunction("__close");
+        }
+
+    }
+
+    protected void showNoSelectionNotification(String noSelectionNotificationMessage) {
+        Notification.show(noSelectionNotificationMessage);
     }
 
     /**
