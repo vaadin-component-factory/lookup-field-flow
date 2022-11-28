@@ -45,8 +45,6 @@ import java.util.Set;
  */
 public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<T, T, ComboBox<T>, CustomFilterLookupField<T, FilterType>, FilterType> implements HasHelper {
 
-    protected String noSelectionNotificationMessage = "No value selected, please select a value";
-
     /**
      * Constructor
      * The converters are used to convert the backend filter to the combobox filter (String)
@@ -207,17 +205,21 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
             getElement().callJsFunction("__close");
             return;
         }
+        String noSelectionNotificationMessage = null;
+        if (getI18n() != null) {
+          noSelectionNotificationMessage = getI18n().getEmptyselection();
+        }
         boolean hasNoSelectionMessage = noSelectionNotificationMessage != null
                 && (!noSelectionNotificationMessage.isEmpty());
         if (hasNoSelectionMessage) {
-            showNoSelectionNotification();
+            showNoSelectionNotification(noSelectionNotificationMessage);
         } else {
             getElement().callJsFunction("__close");
         }
 
     }
 
-    protected void showNoSelectionNotification() {
+    protected void showNoSelectionNotification(String noSelectionNotificationMessage) {
         Notification.show(noSelectionNotificationMessage);
     }
 

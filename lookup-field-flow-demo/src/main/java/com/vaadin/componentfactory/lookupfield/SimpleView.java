@@ -23,6 +23,12 @@ public class SimpleView extends VerticalLayout {
         List<String> items = Arrays.asList("item1","item2", "item3");
         lookupField.setDataProvider(DataProvider.ofCollection(items));
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
+        AbstractLookupField.LookupFieldI18n i18n = new AbstractLookupField.LookupFieldI18n();
+        i18n.setCancel("cancel");
+        i18n.setSearch("search");
+        i18n.setSelect("select");
+        lookupField.setI18n(i18n);
+        lookupField.getI18n().setEmptyselection("Please select one item");
         lookupField.setLabel("Item selector");
         lookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
         lookupField.addValueChangeListener(e -> {
