@@ -1,10 +1,8 @@
 package com.vaadin.componentfactory.lookupfield;
 
 import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
-import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.gridpro.GridPro;
-import com.vaadin.flow.component.gridpro.ItemUpdater;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
@@ -46,10 +44,14 @@ public class GridProView extends VerticalLayout {
     public GridProView() {
         setSizeFull();
         GridPro<Thing> grid = new GridPro<>();
-        grid.setItems(new Thing("Foo"), new Thing("Bar"));
+        grid.setEnterNextRow(true);
+        grid.setItems(new Thing("Foo"), new Thing("Bar"), new Thing("Baz"), new Thing("Quux"));
+        grid.addEditColumn(item -> item.getValue()).text(Thing::setValue).setHeader("Value 1");
+        grid.addEditColumn(item -> item.getBlah()).text(Thing::setBlah).setHeader("Blah 1");
         grid.addEditColumn(item -> item.getValue()).custom(getField(),
-                (thing, s) -> thing.setValue(s)).setHeader("Editor");
-        grid.addColumn(item -> item.getValue()).setHeader("value");
+                Thing::setValue).setHeader("Value (custom editor)");
+        grid.addColumn(item -> item.getValue()).setHeader("n-e value");
+        grid.addColumn(item -> item.getBlah()).setHeader("n-e blah");
         add(getField());
         addAndExpand(grid);
 
@@ -57,14 +59,11 @@ public class GridProView extends VerticalLayout {
 
     public LookupField<String> getField() {
         LookupField<String> lookupField = new LookupField<>();
-        List<String> items = Arrays.asList("Foo", "Bar", "item1","item2", "item3");
+        List<String> items = Arrays.asList("Foo", "Bar", "item1", "item2", "item3");
         lookupField.setDataProvider(DataProvider.ofCollection(items));
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
         lookupField.setLabel("Item selector");
         lookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
-        lookupField.addValueChangeListener(e -> {
-            Notification.show("Changed lookupfield value to " + e.getValue());
-        });
         return lookupField;
     }
 }
