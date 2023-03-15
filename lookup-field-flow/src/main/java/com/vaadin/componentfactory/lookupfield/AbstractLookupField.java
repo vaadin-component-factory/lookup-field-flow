@@ -1,11 +1,10 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.componentfactory.EnhancedDialog;
-import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dependency.Uses;
@@ -35,10 +34,10 @@ import java.util.stream.Stream;
 @Uses(value = Icon.class)
 @Uses(value = TextField.class)
 @Uses(value = Button.class)
-@Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
 @NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "23.3.0")
+@CssImport(value = "./lookup-dialog-themes.css")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T,SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
         implements HasFilterableDataProvider<T, FilterType>,
@@ -153,10 +152,11 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     public <C> void setDataProvider(DataProvider<T, C> dataProvider,
                                     SerializableFunction<FilterType, C> filterConverter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
+        DataProvider<T, String> dataProviderFilteredByString = dataProvider.withConvertedFilter(str -> filterConverter.apply(this.filterConverter.apply(str)));
         if(comboBox instanceof MultiSelectComboBox) {
-            ((MultiSelectComboBox<T>)comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
+            ((MultiSelectComboBox<T>)comboBox).setItems(dataProviderFilteredByString);
         } else if(comboBox instanceof ComboBox) {
-            ((ComboBox<T>)comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
+            ((ComboBox<T>)comboBox).setItems(dataProviderFilteredByString);
         } else {
             throw new RuntimeException("Invalid object passed to the LookupField -> Must be either ComboBox or MultiSelectComboBox");
         }
@@ -218,6 +218,26 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     }
 
     /**
+    * Sets the theme variants of this component. This method overwrites any
+    * previous set theme variants.
+    *
+    * @param variants theme variant
+    */
+   public void setThemeVariants(LookupFieldVariant variants) {
+       getElement().getThemeList().clear();
+       addThemeVariants(variants);
+   }
+
+   /**
+    * Adds the theme variants of this component.
+    *
+    * @param variants theme variant
+    */
+   public void addThemeVariants(LookupFieldVariant... variants) {
+       getElement().getThemeList().addAll(Stream.of(variants).map(LookupFieldVariant::getVariantName).collect(Collectors.toList()));
+   }
+
+   /**
      * Set the header of the dialog
      *
      * @param header text for the header of the dialog
@@ -402,26 +422,6 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     @Override
     public String getErrorMessage() {
         return comboBox.getErrorMessage();
-    }
-
-    /**
-     * Sets the theme variants of this component. This method overwrites any
-     * previous set theme variants.
-     *
-     * @param variants theme variant
-     */
-    public void setThemeVariants(EnhancedDialogVariant... variants) {
-        getElement().getThemeList().clear();
-        addThemeVariants(variants);
-    }
-
-    /**
-     * Adds the theme variants of this component.
-     *
-     * @param variants theme variant
-     */
-    public void addThemeVariants(EnhancedDialogVariant... variants) {
-        getElement().getThemeList().addAll(Stream.of(variants).map(EnhancedDialogVariant::getVariantName).collect(Collectors.toList()));
     }
 
     /**

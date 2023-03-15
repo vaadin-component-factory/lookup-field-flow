@@ -1,6 +1,5 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
 import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.gridpro.GridPro;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -63,7 +62,7 @@ public class GridProView extends VerticalLayout {
         lookupField.setDataProvider(DataProvider.ofCollection(items));
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
         lookupField.setLabel("Item selector");
-        lookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
+        lookupField.addThemeVariants(LookupFieldVariant.SIZE_MEDIUM);
         return lookupField;
     }
 }

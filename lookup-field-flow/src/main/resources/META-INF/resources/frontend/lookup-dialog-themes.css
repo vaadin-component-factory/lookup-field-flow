@@ -1,0 +1,16 @@
+vaadin-dialog-overlay[theme~='small']::part(overlay) {
+    width: 50%;
+    min-width: 25rem;
+    max-width: 40rem;
+}
+
+vaadin-dialog-overlay[theme~='medium']::part(overlay) {
+    width: 70%;
+    min-width: 40rem;
+    max-width: 75rem;
+}
+
+vaadin-dialog-overlay[theme~='large']::part(overlay) {
+    width: 90%;
+    min-width: 40rem;
+}

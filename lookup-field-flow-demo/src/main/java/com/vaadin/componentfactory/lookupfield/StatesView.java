@@ -1,7 +1,5 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.componentfactory.EnhancedDialog;
-import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
@@ -46,7 +44,7 @@ public class StatesView extends VerticalLayout {
         List<String> items = Arrays.asList("item1", "item2", "item3");
         lookupField.setDataProvider(DataProvider.ofCollection(items));
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
-        lookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
+        lookupField.addThemeVariants(LookupFieldVariant.SIZE_MEDIUM);
         return lookupField;
     }
 
