@@ -39,3 +39,4 @@ webpack.generated.js
 # generated
 **/frontend/generated
 /lookup-field-flow-demo/frontend/generated/
+/lookup-field-flow-demo/src/main/dev-bundle/
