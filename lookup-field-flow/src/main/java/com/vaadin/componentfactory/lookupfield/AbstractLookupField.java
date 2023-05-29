@@ -424,6 +424,12 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         return comboBox.getErrorMessage();
     }
 
+    @Override
+    public void setRequiredIndicatorVisible(boolean requiredIndicatorVisible) {
+        HasValueAndElement.super.setRequiredIndicatorVisible(requiredIndicatorVisible);
+        comboBox.setRequiredIndicatorVisible(requiredIndicatorVisible);
+    }
+
     /**
      * Set the header with a custom component
      *
