@@ -404,6 +404,12 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         return comboBox.getErrorMessage();
     }
 
+    @Override
+    public void setRequiredIndicatorVisible(boolean requiredIndicatorVisible) {
+        HasValueAndElement.super.setRequiredIndicatorVisible(requiredIndicatorVisible);
+        comboBox.setRequiredIndicatorVisible(requiredIndicatorVisible);
+    }
+
     /**
      * Sets the theme variants of this component. This method overwrites any
      * previous set theme variants.
