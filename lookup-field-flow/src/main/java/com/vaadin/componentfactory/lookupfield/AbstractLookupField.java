@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 @Uses(value = Button.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "23.3.0")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "23.3.1")
 @CssImport(value = "./lookup-dialog-themes.css")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T,SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
