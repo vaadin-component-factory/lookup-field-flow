@@ -18,17 +18,11 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <lookup-field-flow.version>23.2.2</lookup-field-flow.version>
     </properties>
     <inceptionYear>2020</inceptionYear>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>lookup-field-flow</artifactId>
-                <version>${lookup-field-flow.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-bom</artifactId>
