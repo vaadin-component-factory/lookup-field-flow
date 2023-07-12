@@ -1,20 +1,13 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.componentfactory.lookupfield.bean.Address;
 import com.vaadin.componentfactory.lookupfield.bean.Person;
 import com.vaadin.componentfactory.lookupfield.bean.PersonFilter;
 import com.vaadin.componentfactory.lookupfield.filter.CustomFilterPerson;
 import com.vaadin.componentfactory.lookupfield.service.FilteredPersonService;
-import com.vaadin.componentfactory.lookupfield.service.PersonService;
-import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,7 +43,6 @@ public class CustomFilterTypeView extends VerticalLayout {
         lookupField.setFilter(new CustomFilterPerson());
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
         lookupField.setLabel("Select one item");
-        lookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
         add(lookupField);
 
         CustomFilterMultiSelectLookupField<Person, PersonFilter> multipleLookupField =
@@ -61,7 +53,6 @@ public class CustomFilterTypeView extends VerticalLayout {
         multipleLookupField.setFilter(new CustomFilterPerson());
         multipleLookupField.getGrid().addColumn(s -> s).setHeader("item");
         multipleLookupField.setLabel("Select Multiple items");
-        multipleLookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
         add(multipleLookupField);
     }
 }

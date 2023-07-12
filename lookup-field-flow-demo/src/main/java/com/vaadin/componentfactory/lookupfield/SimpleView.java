@@ -1,7 +1,5 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
@@ -30,7 +28,6 @@ public class SimpleView extends VerticalLayout {
         lookupField.setI18n(i18n);
         lookupField.getI18n().setEmptyselection("Please select one item");
         lookupField.setLabel("Item selector");
-        lookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
         lookupField.addValueChangeListener(e -> {
             add(new Span(++count + ". Value changed to '" + e.getValue() + "'" ));
         });

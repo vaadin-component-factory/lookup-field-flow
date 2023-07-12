@@ -1,12 +1,7 @@
 package com.vaadin.componentfactory.lookupfield;
 
 import com.vaadin.componentfactory.lookupfield.filter.CustomFilterString;
-import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 
@@ -26,7 +21,6 @@ public class CustomFilterView extends Div {
         lookupField.setDataProvider(DataProvider.ofCollection(items));
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
         lookupField.setLabel("Item selector");
-        lookupField.addThemeVariants(EnhancedDialogVariant.SIZE_MEDIUM);
         lookupField.setFilter(new CustomFilterString());
         add(lookupField);
     }

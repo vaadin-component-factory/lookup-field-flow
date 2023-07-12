@@ -1,7 +1,5 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.componentfactory.EnhancedDialog;
-import com.vaadin.componentfactory.theme.EnhancedDialogVariant;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -29,20 +27,17 @@ import elemental.json.JsonObject;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Uses(value = Icon.class)
 @Uses(value = TextField.class)
 @Uses(value = Button.class)
-@Uses(value = EnhancedDialog.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
 @NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "23.3.1")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T,SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
         implements HasFilterableDataProvider<T, FilterType>,
-        HasValueAndElement<AbstractField.ComponentValueChangeEvent<ComponentT, SelectT>, SelectT>, HasValidation, HasSize, HasTheme {
+        HasValueAndElement<AbstractField.ComponentValueChangeEvent<ComponentT, SelectT>, SelectT>, HasValidation, HasSize {
     protected static final String FIELD_SLOT_NAME = "field";
     private static final String GRID_SLOT_NAME = "grid";
     private static final String FILTER_SLOT_NAME = "filter";
@@ -408,26 +403,6 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     public void setRequiredIndicatorVisible(boolean requiredIndicatorVisible) {
         HasValueAndElement.super.setRequiredIndicatorVisible(requiredIndicatorVisible);
         comboBox.setRequiredIndicatorVisible(requiredIndicatorVisible);
-    }
-
-    /**
-     * Sets the theme variants of this component. This method overwrites any
-     * previous set theme variants.
-     *
-     * @param variants theme variant
-     */
-    public void setThemeVariants(EnhancedDialogVariant... variants) {
-        getElement().getThemeList().clear();
-        addThemeVariants(variants);
-    }
-
-    /**
-     * Adds the theme variants of this component.
-     *
-     * @param variants theme variant
-     */
-    public void addThemeVariants(EnhancedDialogVariant... variants) {
-        getElement().getThemeList().addAll(Stream.of(variants).map(EnhancedDialogVariant::getVariantName).collect(Collectors.toList()));
     }
 
     /**
