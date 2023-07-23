@@ -5,7 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ v23 ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
@@ -28,10 +30,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
     - uses: actions/checkout@v2
-    - name: Set up JDK 11
+    - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
-          java-version: '11'
+        java-version: 1.8
     - name: Build with Maven
       run: mvn -B package -Pproduction --file pom.xml
     - name: Rename the war and remove the version
@@ -42,15 +44,15 @@ jobs:
       uses: appleboy/scp-action@v0.1.1
       with:
         # scp remote host
-        host: ${{ secrets.APP_FI_HOST_JAVA11 }}
+        host: ${{ secrets.APP_FI_HOST }}
         # scp remote port
-        port: ${{ secrets.APP_FI_PORT_JAVA11 }}
+        port: ${{ secrets.APP_FI_PORT }}
         # scp username
-        username: ${{ secrets.APP_FI_USER_JAVA11 }}
+        username: ${{ secrets.APP_FI_USER }}
         # scp password
-        password: ${{ secrets.APP_FI_PASSWORD_JAVA11 }}
+        password: ${{ secrets.APP_FI_PASSWORD }}
         # target path on the server
         target: webapps/
         # scp file list
         source: ${{ secrets.DEMO_NAME }}.war
-        fingerprint: ${{ secrets.APP_FI_SHA256_JAVA11 }}
+        fingerprint: ${{ secrets.APP_FI_SHA256 }}
