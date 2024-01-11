@@ -13,6 +13,7 @@ import com.vaadin.flow.component.grid.GridMultiSelectionModel;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.shared.SlotUtils;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.HasFilterableDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
@@ -33,9 +34,9 @@ import java.util.Objects;
 @Uses(value = Button.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "23.3.2")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "23.3.3")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
-        ComponentT extends AbstractLookupField<T,SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
+        ComponentT extends AbstractLookupField<T, SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
         implements HasFilterableDataProvider<T, FilterType>,
         HasValueAndElement<AbstractField.ComponentValueChangeEvent<ComponentT, SelectT>, SelectT>, HasValidation, HasSize, HasTheme {
     protected static final String FIELD_SLOT_NAME = "field";
@@ -49,14 +50,12 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     protected ComboboxT comboBox;
     private ConfigurableFilterDataProvider<T, Void, FilterType> gridDataProvider;
     private LookupFieldFilter<FilterType> filter;
-    private Component header;
-    private Component footer;
     private Runnable notificationWhenEmptySelection;
     protected final SerializableFunction<String, FilterType> filterConverter;
     protected final SerializableFunction<FilterType, String> invertedFilterConverter;
 
-    public AbstractLookupField(SerializableFunction<String, FilterType> filterConverter
-            ,SerializableFunction<FilterType, String> invertedFilterConverter) {
+    public AbstractLookupField(SerializableFunction<String, FilterType> filterConverter,
+                               SerializableFunction<FilterType, String> invertedFilterConverter) {
         super();
         this.filterConverter = filterConverter;
         this.invertedFilterConverter = invertedFilterConverter;
@@ -142,16 +141,16 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
      * @param listDataProvider the list data provider to use, not <code>null</code>
      */
     public abstract void setDataProvider(ComboBox.ItemFilter<T> itemFilter,
-                                ListDataProvider<T> listDataProvider);
+                                         ListDataProvider<T> listDataProvider);
 
     @Override
     public <C> void setDataProvider(DataProvider<T, C> dataProvider,
                                     SerializableFunction<FilterType, C> filterConverter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
-        if(comboBox instanceof MultiSelectComboBox) {
-            ((MultiSelectComboBox<T>)comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
-        } else if(comboBox instanceof ComboBox) {
-            ((ComboBox<T>)comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
+        if (comboBox instanceof MultiSelectComboBox) {
+            ((MultiSelectComboBox<T>) comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
+        } else if (comboBox instanceof ComboBox) {
+            ((ComboBox<T>) comboBox).setDataProvider(dataProvider, str -> filterConverter.apply(this.filterConverter.apply(str)));
         } else {
             throw new RuntimeException("Invalid object passed to the LookupField -> Must be either ComboBox or MultiSelectComboBox");
         }
@@ -413,11 +412,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     public void setHeaderComponent(Component header) {
         Objects.requireNonNull(header, "Header cannot be null");
 
-        if (this.header != null && this.header.getElement().getParent() == getElement()) {
-            this.header.getElement().removeFromParent();
-        }
-
-        this.header = header;
+        SlotUtils.clearSlot(this, HEADER_SLOT_NAME);
         header.getElement().setAttribute(SLOT_KEY, HEADER_SLOT_NAME);
 
         // It might already have a parent e.g when injected from a template
@@ -427,6 +422,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     }
 
     private Registration filterRegistration;
+
     /**
      * Set the filter with a custom component
      *
@@ -471,13 +467,9 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
      * @param footer Custom footer
      */
     public void setFooterComponent(Component footer) {
-        Objects.requireNonNull(grid, "Footer cannot be null");
+        Objects.requireNonNull(footer, "Footer cannot be null");
 
-        if (this.footer != null && this.footer.getElement().getParent() == getElement()) {
-            this.footer.getElement().removeFromParent();
-        }
-
-        this.footer = footer;
+        SlotUtils.clearSlot(this, FOOTER_SLOT_NAME);
         footer.getElement().setAttribute(SLOT_KEY, FOOTER_SLOT_NAME);
 
         // It might already have a parent e.g when injected from a template
@@ -543,6 +535,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     @DomEvent("vcf-lookup-field-filter-event")
     public static class FilterEvent<FILTERTYPE> extends ComponentEvent<AbstractLookupField> {
         private final FILTERTYPE filterValue;
+
         public FilterEvent(AbstractLookupField source, boolean fromClient, @EventData("event.detail.value") FILTERTYPE filterValue) {
             super(source, fromClient);
             this.filterValue = filterValue;
