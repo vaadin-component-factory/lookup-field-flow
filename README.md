@@ -88,7 +88,7 @@ You can change the captions of the buttons, dialog header, serach label.
 
 ## Demo
 
-You can check the demo here: https://incubator.app.fi/lookup-field-flow-demo/
+You can check the demo here: https://componentfactory.app.fi/lookup-field-flow-demo/
 
 ## Missing features or bugs
 
