@@ -33,7 +33,7 @@ jobs:
       with:
           java-version: '11'
     - name: Build with Maven
-      run: mvn -Dvaadin.offlineKey=${{ secrets.PRO_KEY }} -B package -Pproduction --file pom.xml
+      run: mvn -Dvaadin.offlineKey=${{ secrets.PRO_KEY_23_2_PLUS }} -B package -Pproduction --file pom.xml
     - name: Rename the war and remove the version
       run: mv ${{ secrets.DEMO_NAME }}/target/${{ secrets.DEMO_NAME }}*.war ${{ secrets.DEMO_NAME }}.war
     - name: SCP to the server
