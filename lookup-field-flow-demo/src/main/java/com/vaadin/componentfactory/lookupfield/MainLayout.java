@@ -22,9 +22,10 @@ public class MainLayout extends AppLayout {
         final RouterLink customFilterTypeView = new RouterLink("Filter Person", CustomFilterTypeView.class);
         final RouterLink statesView = new RouterLink("Different states", StatesView.class);
         final RouterLink gridProView = new RouterLink("Grid pro", GridProView.class);
+        final RouterLink themeView = new RouterLink("Themes", ThemeView.class);
         final VerticalLayout menuLayout = new VerticalLayout(personLookupField, simple, personLabelLookupField, i18nView,
                 binderView, customHeader, enableSelectButtonView, enableMultipleButtonView, createView, customFilterView,
-                customFilterTypeView, statesView, gridProView);
+                customFilterTypeView, statesView, gridProView, themeView);
         addToDrawer(menuLayout);
         addToNavbar(drawerToggle);
     }
