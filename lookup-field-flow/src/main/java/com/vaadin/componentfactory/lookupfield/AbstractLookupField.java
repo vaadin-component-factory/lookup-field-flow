@@ -595,6 +595,10 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         }
     }
 
+    public void open() {
+        getComboBox().getElement().executeJs("setTimeout(() => $0.open(), 0)");
+    }
+
     /**
      * The internationalization properties for {@link LookupField}.
      */
