@@ -21,6 +21,16 @@ The Lookup field component allows you to search a specific record with:
 * a combobox
 * a dialog and a grid that can contains all the  fields
 
+## Compatibility
+
+- Version 1.x.x -> Up to Vaadin 17.x.x
+- Version 2.x.x -> Vaadin 17+
+- Version 5.x.x -> Vaadin 24.x.x (improved accessibility)
+- Version 23.1.x -> Vaadin 23.1.x
+- Version 23.2.x -> Vaadin 23.2.x
+- Version 23.3.x -> Vaadin 23.3.x
+- Version 24.x.x -> Vaadin 24.x.x
+
 ## How to use it
 
 Create a new component LookupField and use it like a Field.
