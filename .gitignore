@@ -26,6 +26,10 @@ target/
 .eclipse
 .vscode
 
+.project
+.settings
+.classpath
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
@@ -40,3 +44,10 @@ webpack.generated.js
 **/frontend/generated
 /lookup-field-flow-demo/frontend/generated/
 /lookup-field-flow-demo/src/main/dev-bundle/
+/lookup-field-flow-demo/src/main/bundles/
+/lookup-field-flow-demo/frontend/index.html
+/lookup-field-flow-demo/frontend/src/main/index.html
+/lookup-field-flow-demo/vite.generated.ts
+/lookup-field-flow-demo/vite.config.ts
+/lookup-field-flow-demo/tsconfig.json
+/lookup-field-flow-demo/types.d.ts
