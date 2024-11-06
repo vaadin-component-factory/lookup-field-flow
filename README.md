@@ -15,6 +15,12 @@ mvn jetty:run
 
 This deploys demo at http://localhost:8080
 
+## Compatibility
+
+- Version 1.x.x -> Up to Vaadin 17.x.x
+- Version 2.x.x -> Vaadin 17+
+- Version 3.x.x -> Vaadin 23.x
+
 ## Description 
 
 The Lookup field component allows you to search a specific record with:
