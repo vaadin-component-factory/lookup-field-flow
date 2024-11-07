@@ -25,11 +25,9 @@ The Lookup field component allows you to search a specific record with:
 
 - Version 1.x.x -> Up to Vaadin 17.x.x
 - Version 2.x.x -> Vaadin 17+
+- Version 3.x.x -> Vaadin 23.x
+- Version 4.x.x -> Vaadin 24.x
 - Version 5.x.x -> Vaadin 24.x.x (improved accessibility)
-- Version 23.1.x -> Vaadin 23.1.x
-- Version 23.2.x -> Vaadin 23.2.x
-- Version 23.3.x -> Vaadin 23.3.x
-- Version 24.x.x -> Vaadin 24.x.x
 
 ## How to use it
 
