@@ -15,6 +15,9 @@ mvn jetty:run
 
 This deploys demo at http://localhost:8080
 
+## Important information about versioning
+**Component version 23.x was deprecated in order to follow Semanting Versioning practices. Please use latest version 3.x for Vaadin 23.**  
+
 ## Compatibility
 
 - Version 1.x.x -> Up to Vaadin 17.x.x
