@@ -1,19 +1,4 @@
-# 
-
-## Development instructions
-
-Build the project and install the add-on locally:
-```
-mvn clean install
-```
-Starting the demo server:
-
-Go to lookup-field-flow-demo and run:
-```
-mvn jetty:run
-```
-
-This deploys demo at http://localhost:8080
+# Lookup Field Flow
 
 ## Description 
 
@@ -30,6 +15,21 @@ The Lookup field component allows you to search a specific record with:
 - Version 2.x.x -> Vaadin 17+
 - Version 3.x.x -> Vaadin 23.x
 - Version 4.x.x -> Vaadin 24.x
+
+## Development instructions
+
+Build the project and install the add-on locally:
+```
+mvn clean install
+```
+Starting the demo server:
+
+Go to lookup-field-flow-demo and run:
+```
+mvn jetty:run
+```
+
+This deploys demo at http://localhost:8080
 
 ## How to use it
 
