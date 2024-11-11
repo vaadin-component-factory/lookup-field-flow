@@ -1,4 +1,10 @@
-# 
+# Lookup Field Flow
+
+## Description 
+
+The Lookup field component allows you to search a specific record with:
+* a combobox
+* a dialog and a grid that can contains all the  fields
 
 ## Development instructions
 
@@ -13,19 +19,12 @@ Go to lookup-field-flow-demo and run:
 mvn jetty:run
 ```
 
-This deploys demo at http://localhost:8080
-
-## Description 
-
-The Lookup field component allows you to search a specific record with:
-* a combobox
-* a dialog and a grid that can contains all the  fields
+This deploys demo at http://localhost:8080  
 
 ## How to use it
 
 Create a new component LookupField and use it like a Field.
 The API is quite similar to a Vaadin Combobox.
-
 
 ## Examples
 
