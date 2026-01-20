@@ -1,7 +1,5 @@
 package com.vaadin.componentfactory.lookupfield.bean;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * @author jcgueriaud
  */
@@ -44,6 +42,6 @@ public class PersonFilter {
 
     @Override
     public String toString() {
-        return StringUtils.trim(firstName + " " + lastName);
+        return (firstName + " " + lastName).trim();
     }
 }
