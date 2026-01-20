@@ -1,6 +1,5 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.gridpro.GridPro;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;

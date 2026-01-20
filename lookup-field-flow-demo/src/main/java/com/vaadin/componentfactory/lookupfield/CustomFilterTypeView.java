@@ -1,19 +1,13 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.componentfactory.lookupfield.bean.Address;
 import com.vaadin.componentfactory.lookupfield.bean.Person;
 import com.vaadin.componentfactory.lookupfield.bean.PersonFilter;
 import com.vaadin.componentfactory.lookupfield.filter.CustomFilterPerson;
 import com.vaadin.componentfactory.lookupfield.service.FilteredPersonService;
-import com.vaadin.componentfactory.lookupfield.service.PersonService;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

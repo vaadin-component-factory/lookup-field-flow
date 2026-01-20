@@ -3,7 +3,6 @@ package com.vaadin.componentfactory.lookupfield;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
