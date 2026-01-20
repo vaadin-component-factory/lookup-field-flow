@@ -1,6 +1,30 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.flow.component.*;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.ClientCallable;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.DomEvent;
+import com.vaadin.flow.component.EventData;
+import com.vaadin.flow.component.HasEnabled;
+import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.HasStyle;
+import com.vaadin.flow.component.HasTheme;
+import com.vaadin.flow.component.HasValidation;
+import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.HasValueAndElement;
+import com.vaadin.flow.component.ItemLabelGenerator;
+import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
@@ -22,15 +46,9 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.vaadin.flow.function.SerializableFunction;
-import com.vaadin.flow.internal.JsonSerializer;
 import com.vaadin.flow.shared.Registration;
-import elemental.json.JsonObject;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import tools.jackson.databind.ObjectMapper;
 
 @Uses(value = Icon.class)
 @Uses(value = TextField.class)
@@ -373,13 +391,14 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         setI18nWithJS();
     }
 
+    @SuppressWarnings({ "unchecked", "null" })
     private void setI18nWithJS() {
         runBeforeClientResponse(ui -> {
-            JsonObject i18nObject = (JsonObject) JsonSerializer.toJson(i18n);
-            for (String key : i18nObject.keys()) {
-                getElement().executeJs("this.set('i18n." + key + "', $0)",
-                        i18nObject.get(key));
-            }
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> i18nMap = mapper.convertValue(i18n, Map.class);
+            i18nMap.forEach((key, value) -> {
+                getElement().executeJs("this.set('i18n." + key + "', $0)", value);
+            });
         });
     }
 
