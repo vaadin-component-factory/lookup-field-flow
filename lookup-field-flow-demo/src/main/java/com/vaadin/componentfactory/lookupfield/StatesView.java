@@ -1,14 +1,7 @@
 package com.vaadin.componentfactory.lookupfield;
 
-import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.dependency.NpmPackage;
-import com.vaadin.flow.component.dependency.Uses;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.binder.HasFilterableDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.function.SerializableConsumer;
 import com.vaadin.flow.router.Route;
 
 import java.util.Arrays;
