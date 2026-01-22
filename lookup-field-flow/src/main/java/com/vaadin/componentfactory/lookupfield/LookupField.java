@@ -4,7 +4,7 @@ package com.vaadin.componentfactory.lookupfield;
  * #%L
  * lookup-field-flow
  * %%
- * Copyright (C) 2020 Vaadin Ltd
+ * Copyright (C) 2020 - 2026 Vaadin Ltd
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
