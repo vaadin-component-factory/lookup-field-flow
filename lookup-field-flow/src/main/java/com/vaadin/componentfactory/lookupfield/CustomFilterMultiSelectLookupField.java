@@ -25,7 +25,6 @@ import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -44,8 +43,6 @@ import java.util.Set;
  *
  * @param <T> the type of the items to be inserted in the combo box
  */
-
-@CssImport(value = "./lookup-dialog-overlay.css")
 public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractLookupField<T, Set<T>, MultiSelectComboBox<T>, CustomFilterMultiSelectLookupField<T, FilterType>, FilterType> {
 
     private static final String SELECTED_SLOT_NAME = "selected";

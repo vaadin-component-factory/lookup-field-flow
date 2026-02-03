@@ -48,9 +48,9 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -76,7 +76,7 @@ import tools.jackson.databind.ObjectMapper;
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
 @NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "6.0.2")
-@CssImport(value = "./lookup-dialog-themes.css")
+@StyleSheet(value = "lookup-field.css")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T, SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
         implements HasFilterableDataProvider<T, FilterType>,
