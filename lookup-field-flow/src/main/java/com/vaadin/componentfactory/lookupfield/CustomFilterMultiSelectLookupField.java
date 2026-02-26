@@ -189,7 +189,9 @@ public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractL
     @Override
     @ClientCallable
     protected void copyFieldValueFromGrid() {
-        comboBox.setValue(getGrid().getSelectedItems());
+        Set<T> selectedItems = getGrid().getSelectedItems();
+        comboBox.setValue(selectedItems);
+        footerCloseAction();
     }
 
     /**
