@@ -118,12 +118,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         this.grid = grid;
         this.grid.addItemClickListener(e -> {
             if (grid.getSelectionModel() instanceof GridMultiSelectionModel) {
-                if (!grid.getSelectedItems().contains(e.getItem())) {
-                    this.grid.deselectAll();
-                    this.grid.select(e.getItem());
-                } else {
-                    this.grid.deselectAll();
-                }
+               return;
             }
         });
         grid.getElement().setAttribute(SLOT_KEY, GRID_SLOT_NAME);
