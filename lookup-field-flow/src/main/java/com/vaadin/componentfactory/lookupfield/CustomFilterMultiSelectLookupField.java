@@ -86,6 +86,7 @@ public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractL
     public void setGrid(Grid<T> grid) {
         super.setGrid(grid);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        getElement().setProperty("multiSelect", true);
     }
 
     @Override
