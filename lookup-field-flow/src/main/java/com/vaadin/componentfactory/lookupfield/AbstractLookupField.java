@@ -74,7 +74,8 @@ import tools.jackson.databind.ObjectMapper;
 @Uses(value = Button.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "6.1.0")
+//@JsModule("./src/vcf-lookup-field.js")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "6.2.1")
 @StyleSheet(value = "lookup-field.css")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T, SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
@@ -86,6 +87,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     private static final String HEADER_SLOT_NAME = "dialog-header";
     private static final String FOOTER_SLOT_NAME = "dialog-footer";
     protected static final String SLOT_KEY = "slot";
+    public static final String DEFAULT_EMPTY_SELECTION = "Please select an item.";
     private LookupFieldI18n i18n;
     private Grid<T> grid;
     protected ComboboxT comboBox;
@@ -556,7 +558,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     private Runnable getNotificationWhenEmptySelection() {
         if (notificationWhenEmptySelection == null) {
             return () -> {
-                String emptySelection = (getI18n() == null) ? "Please select an item." : getI18n().getEmptyselection();
+                String emptySelection = (getI18n() == null || getI18n().getEmptyselection() == null || getI18n().getEmptyselection().isBlank()) ? DEFAULT_EMPTY_SELECTION : getI18n().getEmptyselection();
                 new Notification(emptySelection, 2000, Notification.Position.TOP_CENTER).open();
             };
         }

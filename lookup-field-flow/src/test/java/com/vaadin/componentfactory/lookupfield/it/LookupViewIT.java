@@ -1,5 +1,6 @@
 package com.vaadin.componentfactory.lookupfield.it;
 
+import com.microsoft.playwright.Locator;
 import com.vaadin.componentfactory.lookupfield.it.support.SpringPlaywrightIT;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,10 @@ import org.vaadin.addons.dramafinder.element.ButtonElement;
 import org.vaadin.addons.dramafinder.element.ComboBoxElement;
 import org.vaadin.addons.dramafinder.element.DialogElement;
 import org.vaadin.addons.dramafinder.element.GridElement;
+import org.vaadin.addons.dramafinder.element.NotificationElement;
 import org.vaadin.addons.dramafinder.element.TextFieldElement;
+
+import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
@@ -77,6 +81,12 @@ public class LookupViewIT extends SpringPlaywrightIT {
         dialogElement.assertClosed();
         ComboBoxElement lookup = ComboBoxElement.getByLabel(page, "Item selector");
         lookup.assertValue("item3");
+    }
+
+    @Test
+    public void testEmptySelectButtonIsDisabled() {
+        DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
+        ButtonElement.getByText(dialogElement.getFooterLocator(), "Select").assertDisabled();
     }
     /**
      * Fills the combo box with "item1" and clicks the icon search button

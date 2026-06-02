@@ -205,18 +205,8 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
             getElement().callJsFunction("__close");
             return;
         }
-        String noSelectionNotificationMessage = null;
-        if (getI18n() != null) {
-          noSelectionNotificationMessage = getI18n().getEmptyselection();
-        }
-        boolean hasNoSelectionMessage = noSelectionNotificationMessage != null
-                && (!noSelectionNotificationMessage.isEmpty());
-        if (hasNoSelectionMessage) {
-            showNoSelectionNotification(noSelectionNotificationMessage);
-        } else {
-            getElement().callJsFunction("__close");
-        }
-
+        String noSelectionNotificationMessage = (getI18n() == null || getI18n().getEmptyselection() == null || getI18n().getEmptyselection().isBlank()) ? DEFAULT_EMPTY_SELECTION : getI18n().getEmptyselection();
+        showNoSelectionNotification(noSelectionNotificationMessage);
     }
 
     protected void showNoSelectionNotification(String noSelectionNotificationMessage) {
