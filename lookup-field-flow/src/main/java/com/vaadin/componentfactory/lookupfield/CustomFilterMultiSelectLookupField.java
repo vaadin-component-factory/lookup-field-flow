@@ -41,14 +41,17 @@ import java.util.Set;
  * The LookupField is a combination of a combobox and a dialog for advanced search.
  *
  *
- * @param <T> the type of the items to be inserted in the combo box
+ * @param <T>          the type of the items to be inserted in the combo box
+ * @param <FilterType> the type of the filter used to query the data provider
  */
 public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractLookupField<T, Set<T>, MultiSelectComboBox<T>, CustomFilterMultiSelectLookupField<T, FilterType>, FilterType> {
 
     private static final String SELECTED_SLOT_NAME = "selected";
 
+    /** Container showing the number of selected items. */
     private Div selected;
 
+    /** Registration of the grid selection listener that updates the selected count. */
     private Registration selectedListener;
 
     /**
@@ -65,12 +68,31 @@ public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractL
         this(new Grid<>(), new MultiSelectComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
+    /**
+     * Constructor.
+     * The converters are used to convert the backend filter to the combobox filter (String)
+     * or if you are using setItems.
+     *
+     * @param beanType                the bean type used to configure the grid columns
+     * @param filterConverter         Convert a string to FilterType
+     * @param invertedFilterConverter Convert a FilterType to String
+     */
     public CustomFilterMultiSelectLookupField(Class<T> beanType,
                                    SerializableFunction<String, FilterType> filterConverter
             ,SerializableFunction<FilterType, String> invertedFilterConverter) {
         this(new Grid<>(beanType), new MultiSelectComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
+    /**
+     * Constructor.
+     * The converters are used to convert the backend filter to the combobox filter (String)
+     * or if you are using setItems.
+     *
+     * @param grid                    the grid to use
+     * @param comboBox                the multi-select combo box to use
+     * @param filterConverter         Convert a string to FilterType
+     * @param invertedFilterConverter Convert a FilterType to String
+     */
     public CustomFilterMultiSelectLookupField(Grid<T> grid, MultiSelectComboBox<T> comboBox,
                                    SerializableFunction<String, FilterType> filterConverter
             ,SerializableFunction<FilterType, String> invertedFilterConverter) {
@@ -168,7 +190,6 @@ public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractL
      * Sets the item label generator that is used to produce the strings shown
      * in the combo box for each item. By default,
      * {@link String#valueOf(Object)} is used.
-     * <p>
      *
      * @param itemLabelGenerator the item label provider to use, not null
      */
@@ -208,9 +229,11 @@ public class CustomFilterMultiSelectLookupField<T, FilterType> extends AbstractL
     }
 
     /**
+     * Controls whether a label showing the number of selected items is displayed
+     * in the dialog.
      *
-     *
-     * @param showSelectedItems
+     * @param showSelectedItems {@code true} to show the selected items count,
+     *                          {@code false} to hide it
      */
     public void showSelectedItems(boolean showSelectedItems) {
         if (this.selected != null && this.selected.getElement().getParent() == getElement()) {

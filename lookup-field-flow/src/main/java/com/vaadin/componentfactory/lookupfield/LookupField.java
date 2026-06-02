@@ -35,14 +35,29 @@ import com.vaadin.flow.function.SerializableFunction;
  */
 public class LookupField<T> extends CustomFilterLookupField<T, String> implements HasHelper {
 
+    /**
+     * Creates a lookup field with a default {@link Grid} and {@link ComboBox}.
+     */
     public LookupField() {
         this(new Grid<>(), new ComboBox<>());
     }
 
+    /**
+     * Creates a lookup field with a {@link Grid} and {@link ComboBox} configured
+     * for the given bean type.
+     *
+     * @param beanType the bean type used to configure the grid columns
+     */
     public LookupField(Class<T> beanType) {
         this(new Grid<>(beanType), new ComboBox<>());
     }
 
+    /**
+     * Creates a lookup field using the given grid and combo box.
+     *
+     * @param grid     the grid to use
+     * @param comboBox the combo box to use
+     */
     public LookupField(Grid<T> grid, ComboBox<T> comboBox) {
         super(grid, comboBox,SerializableFunction.identity(), SerializableFunction.identity());
     }

@@ -12,16 +12,20 @@ import com.vaadin.flow.component.Component;
  *    }
  * });
  * </pre>
+ *
+ * @param <FILTERTYPE> the type of the filter value produced by this component
  */
 public interface LookupFieldFilter<FILTERTYPE> {
 
     /**
+     * Returns the component used to render the filter.
      *
      * @return Filter component
      */
     Component getComponent();
 
     /**
+     * Sets the action that the filter component calls to filter the grid.
      *
      * @param filterAction action to call when you want to filter the grid
      */

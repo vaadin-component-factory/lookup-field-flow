@@ -27,7 +27,7 @@
         <dramafinder.version>1.1.1</dramafinder.version>
         <spring-boot.version>4.0.6</spring-boot.version>
         <playwright.version>1.59.0</playwright.version>
-        <headless>false</headless>
+        <headless>true</headless>
     </properties>
 
     <dependencyManagement>
