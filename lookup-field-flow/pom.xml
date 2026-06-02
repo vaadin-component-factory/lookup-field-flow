@@ -24,7 +24,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <dramafinder.version>1.1.1</dramafinder.version>
+        <dramafinder.version>1.1.2</dramafinder.version>
         <spring-boot.version>4.0.6</spring-boot.version>
         <playwright.version>1.59.0</playwright.version>
         <headless>true</headless>

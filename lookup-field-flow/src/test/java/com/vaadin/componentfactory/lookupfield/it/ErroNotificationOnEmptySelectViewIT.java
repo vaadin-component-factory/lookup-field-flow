@@ -9,6 +9,7 @@ import org.vaadin.addons.dramafinder.element.ButtonElement;
 import org.vaadin.addons.dramafinder.element.ComboBoxElement;
 import org.vaadin.addons.dramafinder.element.DialogElement;
 import org.vaadin.addons.dramafinder.element.GridElement;
+import org.vaadin.addons.dramafinder.element.NotificationElement;
 import org.vaadin.addons.dramafinder.element.TextFieldElement;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -38,6 +39,8 @@ public class ErroNotificationOnEmptySelectViewIT extends SpringPlaywrightIT {
         select.assertEnabled();
         select.click();
         dialogElement.assertOpen();
+        NotificationElement notificationElement = NotificationElement.getByText(page, "Empty selection");
+        notificationElement.assertVisible();
     }
 
     private DialogElement fillComboBoxAndOpenDialog(String value) {
