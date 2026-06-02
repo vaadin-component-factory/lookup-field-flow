@@ -15,7 +15,7 @@ public class DummyViewIT extends SpringPlaywrightIT {
 
     @Override
     public String getView() {
-        return "/dummy";
+        return "dummy";
     }
 
     @Test
