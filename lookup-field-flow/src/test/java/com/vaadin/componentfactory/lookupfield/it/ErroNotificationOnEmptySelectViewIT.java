@@ -15,7 +15,7 @@ import org.vaadin.addons.dramafinder.element.TextFieldElement;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ErroNotificationOnEmptySelectViewIT extends SpringPlaywrightIT {
+class ErroNotificationOnEmptySelectViewIT extends SpringPlaywrightIT {
 
     @Override
     public String getView() {
@@ -23,12 +23,12 @@ public class ErroNotificationOnEmptySelectViewIT extends SpringPlaywrightIT {
     }
 
     @Test
-    public void testTitle() {
+    void testTitle() {
         assertThat(page).hasTitle("Error Notification View");
     }
 
     @Test
-    public void testEmptySelectButtonIsEnabled() {
+    void testEmptySelectButtonIsEnabled() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
         ButtonElement select = ButtonElement.getByText(dialogElement.getFooterLocator(), "Select");
         select.assertEnabled();

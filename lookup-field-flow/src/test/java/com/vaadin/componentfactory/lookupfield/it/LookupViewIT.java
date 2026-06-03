@@ -18,7 +18,7 @@ import java.util.List;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class LookupViewIT extends SpringPlaywrightIT {
+class LookupViewIT extends SpringPlaywrightIT {
 
     @Override
     public String getView() {
@@ -26,30 +26,30 @@ public class LookupViewIT extends SpringPlaywrightIT {
     }
 
     @Test
-    public void testTitle() {
+    void testTitle() {
         assertThat(page).hasTitle("Lookup View");
     }
 
     @Test
-    public void testLookupFieldIsVisible() {
+    void testLookupFieldIsVisible() {
         ComboBoxElement lookup = ComboBoxElement.getByLabel(page, "Item selector");
         lookup.assertVisible();
     }
 
     @Test
-    public void testDialogFooterHasSelectButton() {
+    void testDialogFooterHasSelectButton() {
         DialogElement dialogElement = fillComboBoxWithItem1AndOpenDialog();
         ButtonElement.getByText(dialogElement.getFooterLocator(), "Select").assertVisible();
     }
 
     @Test
-    public void testDialogFooterHasCancelButton() {
+    void testDialogFooterHasCancelButton() {
         DialogElement dialogElement = fillComboBoxWithItem1AndOpenDialog();
         ButtonElement.getByText(dialogElement.getFooterLocator(), "Cancel").assertVisible();
     }
 
     @Test
-    public void testDialogGridHasOneRow() {
+    void testDialogGridHasOneRow() {
         DialogElement dialogElement = fillComboBoxWithItem1AndOpenDialog();
         // The combobox contains item1 then the filter in dialog is already filled
         TextFieldElement.getByLabel(dialogElement.getContentLocator(), "Search").assertValue("item1");
@@ -57,13 +57,13 @@ public class LookupViewIT extends SpringPlaywrightIT {
     }
 
     @Test
-    public void testDialogGridHasThreeRow() {
+    void testDialogGridHasThreeRow() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
         Assertions.assertEquals(3, GridElement.get(dialogElement.getContentLocator()).getTotalRowCount());
     }
 
     @Test
-    public void testDialogFilter() {
+    void testDialogFilter() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
         TextFieldElement.getByLabel(dialogElement.getContentLocator(), "Search").setValue("item3");
         GridElement gridElement = GridElement.get(dialogElement.getContentLocator());
@@ -71,7 +71,7 @@ public class LookupViewIT extends SpringPlaywrightIT {
     }
 
     @Test
-    public void testSelectButton() {
+    void testSelectButton() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
         TextFieldElement.getByLabel(dialogElement.getContentLocator(), "Search").setValue("item3");
         GridElement gridElement = GridElement.get(dialogElement.getContentLocator());
@@ -84,7 +84,7 @@ public class LookupViewIT extends SpringPlaywrightIT {
     }
 
     @Test
-    public void testEmptySelectButtonIsDisabled() {
+    void testEmptySelectButtonIsDisabled() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
         ButtonElement.getByText(dialogElement.getFooterLocator(), "Select").assertDisabled();
     }
