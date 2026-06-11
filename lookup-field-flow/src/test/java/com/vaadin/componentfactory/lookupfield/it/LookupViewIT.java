@@ -100,7 +100,7 @@ class LookupViewIT extends SpringPlaywrightIT {
         if (value != null) {
             ComboBoxElement.getByLabel(page, "Item selector").selectItem(value);
         }
-        new ButtonElement(page.getByLabel("Click to open the search dialog")).click();
+        ButtonElement.getByText(page,"Click to open the search dialog").click();
         DialogElement dialogElement = new DialogElement(page);
         dialogElement.assertOpen();
         return dialogElement;
