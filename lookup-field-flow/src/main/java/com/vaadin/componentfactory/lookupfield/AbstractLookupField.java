@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 @Uses(value = Button.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "5.0.1")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "5.1.3")
 @CssImport(value = "./lookup-dialog-themes.css")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T, SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
@@ -78,16 +78,6 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         }
 
         this.grid = grid;
-        this.grid.addItemClickListener(e -> {
-            if (grid.getSelectionModel() instanceof GridMultiSelectionModel) {
-                if (!grid.getSelectedItems().contains(e.getItem())) {
-                    this.grid.deselectAll();
-                    this.grid.select(e.getItem());
-                } else {
-                    this.grid.deselectAll();
-                }
-            }
-        });
         grid.getElement().setAttribute(SLOT_KEY, GRID_SLOT_NAME);
 
         // It might already have a parent e.g when injected from a template
