@@ -508,7 +508,6 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
      */
     public void footerSelectAction() {
         copyFieldValueFromGrid();
-        footerCloseAction();
     }
 
     /**
