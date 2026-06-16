@@ -1,7 +1,9 @@
 package com.vaadin.componentfactory.lookupfield;
 
 /**
- * Filter action
+ * Filter action.
+ *
+ * @param <T> the type of the filter value passed to {@link #filter(Object)}
  */
 @FunctionalInterface
 public interface LookupFieldFilterAction<T> {

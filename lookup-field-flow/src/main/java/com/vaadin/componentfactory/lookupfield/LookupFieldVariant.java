@@ -1,7 +1,19 @@
 package com.vaadin.componentfactory.lookupfield;
 
+/**
+ * Theme variants that can be applied to the lookup field.
+ */
 public enum LookupFieldVariant {
-    SIZE_SMALL("small"), SIZE_MEDIUM("medium"), SIZE_LARGE("large"), FULL_WIDTH_LABEL("full-width"), INTEGRATED("integrated");
+    /** Small size variant. */
+    SIZE_SMALL("small"),
+    /** Medium size variant. */
+    SIZE_MEDIUM("medium"),
+    /** Large size variant. */
+    SIZE_LARGE("large"),
+    /** Variant that makes the label take the full width. */
+    FULL_WIDTH_LABEL("full-width"),
+    /** Variant that renders the field in an integrated style. */
+    INTEGRATED("integrated");
 
     private final String variant;
 
@@ -9,6 +21,11 @@ public enum LookupFieldVariant {
         this.variant = variant;
     }
 
+    /**
+     * Gets the theme name used by this variant.
+     *
+     * @return the variant theme name
+     */
     public String getVariantName() {
         return variant;
     }

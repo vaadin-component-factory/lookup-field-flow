@@ -19,11 +19,15 @@
     </organization>
 
     <properties>
-        <vaadin.version>25.0.2</vaadin.version>
+        <vaadin.version>25.1.6</vaadin.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <dramafinder.version>1.1.2</dramafinder.version>
+        <spring-boot.version>4.0.6</spring-boot.version>
+        <playwright.version>1.59.0</playwright.version>
+        <headless>true</headless>
     </properties>
 
     <dependencyManagement>
@@ -34,6 +38,13 @@
                 <type>pom</type>
                 <scope>import</scope>
                 <version>${vaadin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -72,6 +83,43 @@
             <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin-core</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Test: Spring Boot test server for DramaFinder / Playwright ITs -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-spring-boot-starter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Needed because the test server runs in development mode: it builds the
+             frontend bundle at runtime from the actual running app (so test-only
+             views render fully instead of being tree-shaken from a prod bundle). -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-dev-server</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>${playwright.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>dramafinder</artifactId>
+            <version>${dramafinder.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -127,6 +175,53 @@
         </plugins>
     </build>
     <profiles>
+        <!-- Builds the Vaadin frontend and runs the Playwright integration tests
+             (*IT.java). Kept in a profile so the published add-on jar is unaffected.
+             Run with: mvn verify -Pit -->
+        <profile>
+            <id>it</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.vaadin</groupId>
+                        <artifactId>vaadin-maven-plugin</artifactId>
+                        <version>${vaadin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>frontend</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>prepare-frontend</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.5.4</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <trimStackTrace>false</trimStackTrace>
+                            <enableAssertions>true</enableAssertions>
+                            <systemPropertyVariables>
+                                <headless>${headless}</headless>
+                            </systemPropertyVariables>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>directory</id>
             <build>

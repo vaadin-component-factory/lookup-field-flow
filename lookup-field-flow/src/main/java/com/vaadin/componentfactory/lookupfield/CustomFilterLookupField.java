@@ -59,12 +59,31 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
         this(new Grid<>(), new ComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
+    /**
+     * Constructor.
+     * The converters are used to convert the backend filter to the combobox filter (String)
+     * or if you are using setItems.
+     *
+     * @param beanType                the bean type used to configure the grid columns
+     * @param filterConverter         Convert a string to FilterType
+     * @param invertedFilterConverter Convert a FilterType to String
+     */
     public CustomFilterLookupField(Class<T> beanType,
                                    SerializableFunction<String, FilterType> filterConverter
             , SerializableFunction<FilterType, String> invertedFilterConverter) {
         this(new Grid<>(beanType), new ComboBox<>(), filterConverter, invertedFilterConverter);
     }
 
+    /**
+     * Constructor.
+     * The converters are used to convert the backend filter to the combobox filter (String)
+     * or if you are using setItems.
+     *
+     * @param grid                    the grid to use
+     * @param comboBox                the combo box to use
+     * @param filterConverter         Convert a string to FilterType
+     * @param invertedFilterConverter Convert a FilterType to String
+     */
     public CustomFilterLookupField(Grid<T> grid, ComboBox<T> comboBox,
                                    SerializableFunction<String, FilterType> filterConverter
             , SerializableFunction<FilterType, String> invertedFilterConverter) {
@@ -156,7 +175,6 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
      * Sets the item label generator that is used to produce the strings shown
      * in the combo box for each item. By default,
      * {@link String#valueOf(Object)} is used.
-     * <p>
      *
      * @param itemLabelGenerator the item label provider to use, not null
      */
@@ -205,20 +223,15 @@ public class CustomFilterLookupField<T, FilterType> extends AbstractLookupField<
             getElement().callJsFunction("__close");
             return;
         }
-        String noSelectionNotificationMessage = null;
-        if (getI18n() != null) {
-          noSelectionNotificationMessage = getI18n().getEmptyselection();
-        }
-        boolean hasNoSelectionMessage = noSelectionNotificationMessage != null
-                && (!noSelectionNotificationMessage.isEmpty());
-        if (hasNoSelectionMessage) {
-            showNoSelectionNotification(noSelectionNotificationMessage);
-        } else {
-            getElement().callJsFunction("__close");
-        }
-
+        String noSelectionNotificationMessage = (getI18n() == null || getI18n().getEmptyselection() == null || getI18n().getEmptyselection().isBlank()) ? DEFAULT_EMPTY_SELECTION : getI18n().getEmptyselection();
+        showNoSelectionNotification(noSelectionNotificationMessage);
     }
 
+    /**
+     * Shows a notification when the user tries to select without a grid selection.
+     *
+     * @param noSelectionNotificationMessage the message to display
+     */
     protected void showNoSelectionNotification(String noSelectionNotificationMessage) {
         Notification.show(noSelectionNotificationMessage);
     }

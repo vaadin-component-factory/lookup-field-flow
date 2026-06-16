@@ -69,32 +69,64 @@ import com.vaadin.flow.shared.Registration;
 
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * Base class for the server-side components of the {@code vcf-lookup-field} webcomponent.
+ * <p>
+ * A lookup field is a combination of a combo box and a dialog for advanced search.
+ *
+ * @param <T>          the type of the items shown in the combo box and grid
+ * @param <SelectT>    the value type of the field (a single item or a set of items)
+ * @param <ComboboxT>  the type of the combo box used as the field
+ * @param <ComponentT> the concrete component type, used for the fluent value-change API
+ * @param <FilterType> the type of the filter used to query the data provider
+ */
 @Uses(value = Icon.class)
 @Uses(value = TextField.class)
 @Uses(value = Button.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "6.1.0")
+//@JsModule("./src/vcf-lookup-field.js")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "6.2.1")
 @StyleSheet(value = "lookup-field.css")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T, SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
         implements HasFilterableDataProvider<T, FilterType>,
         HasValueAndElement<AbstractField.ComponentValueChangeEvent<ComponentT, SelectT>, SelectT>, HasValidation, HasSize, HasTheme {
+    /** Name of the slot holding the field (combo box). */
     protected static final String FIELD_SLOT_NAME = "field";
     private static final String GRID_SLOT_NAME = "grid";
     private static final String FILTER_SLOT_NAME = "filter";
     private static final String HEADER_SLOT_NAME = "dialog-header";
     private static final String FOOTER_SLOT_NAME = "dialog-footer";
+    /** Attribute key used to assign a component to a slot. */
     protected static final String SLOT_KEY = "slot";
+    /** Default message shown when the selection is empty. */
+    public static final String DEFAULT_EMPTY_SELECTION = "Please select an item.";
+    /** Internationalization properties of this component. */
     private LookupFieldI18n i18n;
+    /** Grid shown in the advanced search dialog. */
     private Grid<T> grid;
+    /** Combo box used as the field. */
     protected ComboboxT comboBox;
+    /** Configurable filter data provider backing the grid. */
     private ConfigurableFilterDataProvider<T, Void, FilterType> gridDataProvider;
+    /** Custom filter component, or {@code null} when the default filter is used. */
     private LookupFieldFilter<FilterType> filter;
+    /** Action run when the selection is empty and the select button is clicked. */
     private Runnable notificationWhenEmptySelection;
+    /** Converts the combo box filter string into the data provider filter type. */
     protected final SerializableFunction<String, FilterType> filterConverter;
+    /** Converts the data provider filter type back into a combo box filter string. */
     protected final SerializableFunction<FilterType, String> invertedFilterConverter;
 
+    /**
+     * Creates a lookup field with the given filter converters.
+     *
+     * @param filterConverter         converts the combo box filter string into the
+     *                                data provider filter type
+     * @param invertedFilterConverter converts the data provider filter type back
+     *                                into a combo box filter string
+     */
     public AbstractLookupField(SerializableFunction<String, FilterType> filterConverter,
                                SerializableFunction<FilterType, String> invertedFilterConverter) {
         super();
@@ -132,6 +164,8 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     public abstract void setComboBox(ComboboxT comboBox);
 
     /**
+     * Gets the internal combo box used as the field.
+     *
      * @return the internal field
      */
     public abstract ComboboxT getComboBox();
@@ -142,7 +176,6 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
      * filter text is a substring of the label displayed for that item, which
      * you can configure with
      * {@link #setItemLabelGenerator(ItemLabelGenerator)}.
-     * <p>
      *
      * @param items the data items to display
      */
@@ -152,6 +185,8 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     }
 
     /**
+     * Sets the items to display, using the given item filter for the combo box.
+     *
      * @param itemFilter filter to check if an item is shown when user typed some text
      *                   into the ComboBox
      * @param items      the data items to display
@@ -162,6 +197,11 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         setDataProvider(itemFilter, listDataProvider);
     }
 
+    /**
+     * Sets a list data provider as the data provider.
+     *
+     * @param listDataProvider the list data provider to use, not <code>null</code>
+     */
     public abstract void setDataProvider(ListDataProvider<T> listDataProvider);
 
     /**
@@ -192,6 +232,8 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     }
 
     /**
+     * Gets the internal grid shown in the advanced search dialog.
+     *
      * @return the internal grid
      */
     public Grid<T> getGrid() {
@@ -226,7 +268,6 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
      * Sets the item label generator that is used to produce the strings shown
      * in the combo box for each item. By default,
      * {@link String#valueOf(Object)} is used.
-     * <p>
      *
      * @param itemLabelGenerator the item label provider to use, not null
      */
@@ -474,6 +515,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         }
     }
 
+    /** Registration of the listener that filters the grid from the custom filter. */
     private Registration filterRegistration;
 
     /**
@@ -556,7 +598,7 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     private Runnable getNotificationWhenEmptySelection() {
         if (notificationWhenEmptySelection == null) {
             return () -> {
-                String emptySelection = (getI18n() == null) ? "Please select an item." : getI18n().getEmptyselection();
+                String emptySelection = (getI18n() == null || getI18n().getEmptyselection() == null || getI18n().getEmptyselection().isBlank()) ? DEFAULT_EMPTY_SELECTION : getI18n().getEmptyselection();
                 new Notification(emptySelection, 2000, Notification.Position.TOP_CENTER).open();
             };
         }
@@ -584,15 +626,33 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         return addListener(FilterEvent.class, (ComponentEventListener) listener);
     }
 
+    /**
+     * Event fired when the user filters the grid through the custom filter.
+     *
+     * @param <FILTERTYPE> the type of the filter value
+     */
     @DomEvent("vcf-lookup-field-filter-event")
     public static class FilterEvent<FILTERTYPE> extends ComponentEvent<AbstractLookupField> {
+        /** The filter value carried by the event. */
         private final FILTERTYPE filterValue;
 
+        /**
+         * Creates a new filter event.
+         *
+         * @param source      the source component
+         * @param fromClient  {@code true} if the event originated from the client
+         * @param filterValue the filter value
+         */
         public FilterEvent(AbstractLookupField source, boolean fromClient, @EventData("event.detail.value") FILTERTYPE filterValue) {
             super(source, fromClient);
             this.filterValue = filterValue;
         }
 
+        /**
+         * Gets the filter value carried by this event.
+         *
+         * @return the filter value
+         */
         public FILTERTYPE getFilterValue() {
             return filterValue;
         }
@@ -611,17 +671,35 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         return addListener(CreateItemEvent.class, listener);
     }
 
+    /**
+     * Sets whether the create button is visible.
+     *
+     * @param createVisible {@code true} to show the create button,
+     *                      {@code false} to hide it
+     */
     public void setCreateVisible(boolean createVisible) {
         getElement().setProperty("createhidden", !createVisible);
     }
 
+    /**
+     * Event fired when the user clicks the create item button.
+     */
     @DomEvent("vcf-lookup-field-create-item-event")
     public static class CreateItemEvent extends ComponentEvent<AbstractLookupField> {
+        /**
+         * Creates a new create-item event.
+         *
+         * @param source     the source component
+         * @param fromClient {@code true} if the event originated from the client
+         */
         public CreateItemEvent(AbstractLookupField source, boolean fromClient) {
             super(source, fromClient);
         }
     }
 
+    /**
+     * Opens the combo box overlay.
+     */
     public void open() {
         getComboBox().getElement().executeJs("setTimeout(() => $0.open(), 0)");
     }
@@ -630,92 +708,206 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
      * The internationalization properties for {@link LookupField}.
      */
     public static class LookupFieldI18n implements Serializable {
+        /** Text of the select button. */
         private String select;
+        /** Text of the cancel button. */
         private String cancel;
+        /** Aria label of the search field. */
         private String searcharialabel;
+        /** Text shown before the dialog header. */
         private String headerprefix;
+        /** Text shown after the dialog header. */
         private String headerpostfix;
+        /** Text of the search field. */
         private String search;
+        /** Message shown when the selection is empty. */
         private String emptyselection;
+        /** Text of the create button. */
         private String create;
+        /** Text showing the number of selected items. */
         private String selectedText;
 
+        /**
+         * Creates an empty internationalization properties object.
+         */
+        public LookupFieldI18n() {
+        }
+
+        /**
+         * Gets the search field text.
+         *
+         * @return the search field text
+         */
         public String getSearch() {
             return search;
         }
 
+        /**
+         * Sets the search field text.
+         *
+         * @param search the search field text
+         * @return this instance for method chaining
+         */
         public LookupFieldI18n setSearch(String search) {
             this.search = search;
             return this;
         }
 
+        /**
+         * Gets the select button text.
+         *
+         * @return the select button text
+         */
         public String getSelect() {
             return select;
         }
 
+        /**
+         * Sets the select button text.
+         *
+         * @param select the select button text
+         * @return this instance for method chaining
+         */
         public LookupFieldI18n setSelect(String select) {
             this.select = select;
             return this;
         }
 
+        /**
+         * Gets the cancel button text.
+         *
+         * @return the cancel button text
+         */
         public String getCancel() {
             return cancel;
         }
 
+        /**
+         * Sets the cancel button text.
+         *
+         * @param cancel the cancel button text
+         * @return this instance for method chaining
+         */
         public LookupFieldI18n setCancel(String cancel) {
             this.cancel = cancel;
             return this;
         }
 
+        /**
+         * Gets the aria label of the search field.
+         *
+         * @return the search field aria label
+         */
         public String getSearcharialabel() {
             return searcharialabel;
         }
 
+        /**
+         * Sets the aria label of the search field.
+         *
+         * @param searcharialabel the search field aria label
+         * @return this instance for method chaining
+         */
         public LookupFieldI18n setSearcharialabel(String searcharialabel) {
             this.searcharialabel = searcharialabel;
             return this;
         }
 
+        /**
+         * Gets the text shown before the dialog header.
+         *
+         * @return the header prefix text
+         */
         public String getHeaderprefix() {
             return headerprefix;
         }
 
+        /**
+         * Sets the text shown before the dialog header.
+         *
+         * @param headerprefix the header prefix text
+         * @return this instance for method chaining
+         */
         public LookupFieldI18n setHeaderprefix(String headerprefix) {
             this.headerprefix = headerprefix;
             return this;
         }
 
+        /**
+         * Gets the text shown after the dialog header.
+         *
+         * @return the header postfix text
+         */
         public String getHeaderpostfix() {
             return headerpostfix;
         }
 
+        /**
+         * Sets the text shown after the dialog header.
+         *
+         * @param headerpostfix the header postfix text
+         * @return this instance for method chaining
+         */
         public LookupFieldI18n setHeaderpostfix(String headerpostfix) {
             this.headerpostfix = headerpostfix;
             return this;
         }
 
+        /**
+         * Gets the message shown when the selection is empty.
+         *
+         * @return the empty selection message
+         */
         public String getEmptyselection() {
             return emptyselection;
         }
 
+        /**
+         * Sets the message shown when the selection is empty.
+         *
+         * @param emptyselection the empty selection message
+         * @return this instance for method chaining
+         */
         public LookupFieldI18n setEmptyselection(String emptyselection) {
             this.emptyselection = emptyselection;
             return this;
         }
 
+        /**
+         * Gets the create button text.
+         *
+         * @return the create button text
+         */
         public String getCreate() {
             return create;
         }
 
+        /**
+         * Sets the create button text.
+         *
+         * @param create the create button text
+         * @return this instance for method chaining
+         */
         public LookupFieldI18n setCreate(String create) {
             this.create = create;
             return this;
         }
 
+        /**
+         * Gets the text showing the number of selected items.
+         *
+         * @return the selected items text
+         */
         public String getSelectedText() {
             return selectedText;
         }
 
+        /**
+         * Sets the text showing the number of selected items.
+         *
+         * @param selectedText the selected items text
+         * @return this instance for method chaining
+         */
         public LookupFieldI18n setSelectedText(String selectedText) {
             this.selectedText = selectedText;
             return this;

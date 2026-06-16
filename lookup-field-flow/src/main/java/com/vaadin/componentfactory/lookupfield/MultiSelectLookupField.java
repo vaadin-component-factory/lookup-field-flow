@@ -36,14 +36,30 @@ import com.vaadin.flow.function.SerializableFunction;
 
 public class MultiSelectLookupField<T> extends CustomFilterMultiSelectLookupField<T, String> {
 
+    /**
+     * Creates a multi-select lookup field with a default {@link Grid} and
+     * {@link MultiSelectComboBox}.
+     */
     public MultiSelectLookupField() {
         this(new Grid<>(), new MultiSelectComboBox<>());
     }
 
+    /**
+     * Creates a multi-select lookup field with a {@link Grid} and
+     * {@link MultiSelectComboBox} configured for the given bean type.
+     *
+     * @param beanType the bean type used to configure the grid columns
+     */
     public MultiSelectLookupField(Class<T> beanType) {
         this(new Grid<>(beanType), new MultiSelectComboBox<>());
     }
 
+    /**
+     * Creates a multi-select lookup field using the given grid and combo box.
+     *
+     * @param grid     the grid to use
+     * @param comboBox the multi-select combo box to use
+     */
     public MultiSelectLookupField(Grid<T> grid, MultiSelectComboBox<T> comboBox) {
         super(grid, comboBox, SerializableFunction.identity(), SerializableFunction.identity());
     }
