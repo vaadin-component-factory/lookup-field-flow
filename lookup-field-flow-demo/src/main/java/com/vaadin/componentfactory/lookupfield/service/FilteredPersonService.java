@@ -21,7 +21,7 @@ public class FilteredPersonService {
 
     private boolean filter(Person person, PersonFilter filter) {
         boolean result = true;
-        if (filter == null || (isEmpty(filter.getLastName()) && isEmpty(filter.getFirstName()))) {
+        if (filter == null || (isEmpty(filter.getLastName()) && isEmpty(filter.getFirstName()) && isEmpty(filter.getFullName()))) {
             return true;
         }
         if ((isEmpty(filter.getLastName()) && isEmpty(filter.getFirstName()))) {
@@ -36,6 +36,6 @@ public class FilteredPersonService {
     }
 
     private boolean isEmpty(String field) {
-      return field == null || field == ""; 
+      return field == null || field.isEmpty();
     }
 }
