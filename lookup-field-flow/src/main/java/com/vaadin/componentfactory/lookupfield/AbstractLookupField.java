@@ -86,7 +86,7 @@ import tools.jackson.databind.ObjectMapper;
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
 //@JsModule("./src/vcf-lookup-field.js")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "7.0.0")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "7.0.1")
 @StyleSheet(value = "lookup-field.css")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T, SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
