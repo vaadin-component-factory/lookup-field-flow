@@ -22,7 +22,7 @@ public class CreateItemView extends Div {
         lookupField.getGrid().addColumn(s -> s).setHeader("item");
         lookupField.setLabel("Item selector");
         lookupField.addThemeVariants(LookupFieldVariant.SIZE_MEDIUM);
-        lookupField.addCreateItemListener(e -> Notification.show("Create item clicked"));
+        lookupField.addCreateItemListener(e -> Notification.show("Create item clicked, search text: " + e.getFilter()));
         add(lookupField);
     }
 
