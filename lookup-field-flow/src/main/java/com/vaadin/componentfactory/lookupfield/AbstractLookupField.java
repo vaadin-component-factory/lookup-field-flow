@@ -695,14 +695,29 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
      */
     @DomEvent("vcf-lookup-field-create-item-event")
     public static class CreateItemEvent extends ComponentEvent<AbstractLookupField> {
+        private final String filter;
+
         /**
          * Creates a new create-item event.
          *
          * @param source     the source component
          * @param fromClient {@code true} if the event originated from the client
+         * @param filter     the text in the search field of the dialog
          */
-        public CreateItemEvent(AbstractLookupField source, boolean fromClient) {
+        public CreateItemEvent(AbstractLookupField source, boolean fromClient,
+                @EventData("event.detail.filter") String filter) {
             super(source, fromClient);
+            this.filter = filter;
+        }
+
+        /**
+         * Gets the text in the search field of the dialog when the create
+         * button was clicked, usually the start of the item to create.
+         *
+         * @return the search text, empty when nothing was typed
+         */
+        public String getFilter() {
+            return filter == null ? "" : filter;
         }
     }
 
