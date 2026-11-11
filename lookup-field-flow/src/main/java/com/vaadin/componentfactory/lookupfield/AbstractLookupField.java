@@ -22,7 +22,6 @@ package com.vaadin.componentfactory.lookupfield;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -68,6 +67,7 @@ import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.shared.Registration;
 
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * Base class for the server-side components of the {@code vcf-lookup-field} webcomponent.
@@ -441,14 +441,19 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         setI18nWithJS();
     }
 
-    @SuppressWarnings({ "unchecked", "null" })
     private void setI18nWithJS() {
         runBeforeClientResponse(ui -> {
+            // The web component merges the object it gets over its default
+            // texts, so the texts left null here are left out and keep their
+            // default instead of being cleared.
             ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> i18nMap = mapper.convertValue(i18n, Map.class);
-            i18nMap.forEach((key, value) -> {
-                getElement().executeJs("this.set('i18n." + key + "', $0)", value);
+            ObjectNode i18nJson = mapper.createObjectNode();
+            mapper.valueToTree(i18n).properties().forEach(entry -> {
+                if (!entry.getValue().isNull()) {
+                    i18nJson.set(entry.getKey(), entry.getValue());
+                }
             });
+            getElement().executeJs("this.i18n = $0", i18nJson);
         });
     }
 
