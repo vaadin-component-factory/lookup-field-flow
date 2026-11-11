@@ -735,6 +735,8 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         private String create;
         /** Text showing the number of selected items. */
         private String selectedText;
+        /** Accessible name of the dialog when it has no title. */
+        private String dialogarialabel;
 
         /**
          * Creates an empty internationalization properties object.
@@ -919,6 +921,27 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
          */
         public LookupFieldI18n setSelectedText(String selectedText) {
             this.selectedText = selectedText;
+            return this;
+        }
+
+        /**
+         * Gets the accessible name of the dialog when it has no title.
+         *
+         * @return the accessible name of an untitled dialog
+         */
+        public String getDialogarialabel() {
+            return dialogarialabel;
+        }
+
+        /**
+         * Sets the accessible name of the dialog when it has no title. When
+         * the dialog has a title, screen readers announce the title instead.
+         *
+         * @param dialogarialabel the accessible name of an untitled dialog
+         * @return this instance for method chaining
+         */
+        public LookupFieldI18n setDialogarialabel(String dialogarialabel) {
+            this.dialogarialabel = dialogarialabel;
             return this;
         }
     }
