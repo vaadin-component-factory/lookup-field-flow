@@ -52,29 +52,29 @@ class LookupViewIT extends SpringPlaywrightIT {
     void testDialogGridHasOneRow() {
         DialogElement dialogElement = fillComboBoxWithItem1AndOpenDialog();
         // The combobox contains item1 then the filter in dialog is already filled
-        TextFieldElement.getByLabel(dialogElement.getContentLocator(), "Search").assertValue("item1");
-        Assertions.assertEquals(1, GridElement.get(dialogElement.getContentLocator()).getTotalRowCount());
+        TextFieldElement.getByLabel(dialogContent(), "Search").assertValue("item1");
+        Assertions.assertEquals(1, GridElement.get(dialogContent()).getTotalRowCount());
     }
 
     @Test
     void testDialogGridHasThreeRow() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
-        Assertions.assertEquals(3, GridElement.get(dialogElement.getContentLocator()).getTotalRowCount());
+        Assertions.assertEquals(3, GridElement.get(dialogContent()).getTotalRowCount());
     }
 
     @Test
     void testDialogFilter() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
-        TextFieldElement.getByLabel(dialogElement.getContentLocator(), "Search").setValue("item3");
-        GridElement gridElement = GridElement.get(dialogElement.getContentLocator());
+        TextFieldElement.getByLabel(dialogContent(), "Search").setValue("item3");
+        GridElement gridElement = GridElement.get(dialogContent());
         Assertions.assertEquals(1, gridElement.getTotalRowCount());
     }
 
     @Test
     void testSelectButton() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
-        TextFieldElement.getByLabel(dialogElement.getContentLocator(), "Search").setValue("item3");
-        GridElement gridElement = GridElement.get(dialogElement.getContentLocator());
+        TextFieldElement.getByLabel(dialogContent(), "Search").setValue("item3");
+        GridElement gridElement = GridElement.get(dialogContent());
         Assertions.assertEquals(1, gridElement.getTotalRowCount());
         gridElement.select(0);
         ButtonElement.getByText(dialogElement.getFooterLocator(), "Select").click();
@@ -88,6 +88,15 @@ class LookupViewIT extends SpringPlaywrightIT {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
         ButtonElement.getByText(dialogElement.getFooterLocator(), "Select").assertDisabled();
     }
+    /**
+     * Where the search field and the grid of the dialog are. They stay children
+     * of {@code vcf-lookup-field}, which shows them in the dialog through
+     * forwarded slots, so they are not inside the {@code vaadin-dialog} element.
+     */
+    private Locator dialogContent() {
+        return page.locator("vcf-lookup-field");
+    }
+
     /**
      * Fills the combo box with "item1" and clicks the icon search button
      * (located by its accessible name) to open the lookup dialog.
