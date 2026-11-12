@@ -26,7 +26,7 @@ html{
 	--lookup-field-border-radius: var(--lumo-border-radius-s, var(--vaadin-radius-m))
 }
 
-vaadin-dialog-content .selected-text {
+vcf-lookup-field > .selected-text {
     align-items: center;
     box-sizing: border-box;
     display: flex;
@@ -37,19 +37,19 @@ vaadin-dialog-content .selected-text {
     border-top: none;
 }
 
-vaadin-dialog[theme~='small']::part(overlay) {
+vcf-lookup-field[theme~='small']::part(dialog-overlay) {
     width: 50%;
     min-width: 25rem;
     max-width: 40rem;
 }
 
-vaadin-dialog[theme~='medium']::part(overlay) {
+vcf-lookup-field[theme~='medium']::part(dialog-overlay) {
     width: 70%;
     min-width: 40rem;
     max-width: 75rem;
 }
 
-vaadin-dialog[theme~='large']::part(overlay) {
+vcf-lookup-field[theme~='large']::part(dialog-overlay) {
     width: 90%;
     min-width: 40rem;
 }
