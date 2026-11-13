@@ -715,6 +715,21 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         private final String filter;
 
         /**
+         * Creates a new create-item event without the search text, so
+         * {@link #getFilter()} returns an empty string.
+         *
+         * @param source     the source component
+         * @param fromClient {@code true} if the event originated from the client
+         * @deprecated use
+         *             {@link #CreateItemEvent(AbstractLookupField, boolean, String)}
+         *             to pass the search text
+         */
+        @Deprecated
+        public CreateItemEvent(AbstractLookupField source, boolean fromClient) {
+            this(source, fromClient, "");
+        }
+
+        /**
          * Creates a new create-item event.
          *
          * @param source     the source component
