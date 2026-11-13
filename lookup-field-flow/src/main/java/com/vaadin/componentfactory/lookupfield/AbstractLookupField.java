@@ -101,6 +101,8 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     protected static final String SLOT_KEY = "slot";
     /** Default message shown when the selection is empty. */
     public static final String DEFAULT_EMPTY_SELECTION = "Please select an item.";
+    /** Converts the i18n texts to JSON; immutable, so it can be shared. */
+    private static final ObjectMapper I18N_MAPPER = new ObjectMapper();
     /** Internationalization properties of this component. */
     private LookupFieldI18n i18n;
     /** Pending update of the i18n texts in the web component. */
@@ -469,9 +471,8 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         // The web component merges the object it gets over its default
         // texts, so the texts left null here are left out and keep their
         // default instead of being cleared.
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode i18nJson = mapper.createObjectNode();
-        mapper.valueToTree(i18n).properties().forEach(entry -> {
+        ObjectNode i18nJson = I18N_MAPPER.createObjectNode();
+        I18N_MAPPER.valueToTree(i18n).properties().forEach(entry -> {
             if (!entry.getValue().isNull()) {
                 i18nJson.set(entry.getKey(), entry.getValue());
             }
