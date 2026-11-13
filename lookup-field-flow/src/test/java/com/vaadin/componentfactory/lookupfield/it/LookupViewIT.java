@@ -50,7 +50,7 @@ class LookupViewIT extends SpringPlaywrightIT {
 
     @Test
     void testDialogGridHasOneRow() {
-        DialogElement dialogElement = fillComboBoxWithItem1AndOpenDialog();
+        fillComboBoxWithItem1AndOpenDialog();
         // The combobox contains item1 then the filter in dialog is already filled
         TextFieldElement.getByLabel(dialogContent(), "Search").assertValue("item1");
         Assertions.assertEquals(1, GridElement.get(dialogContent()).getTotalRowCount());
@@ -58,13 +58,13 @@ class LookupViewIT extends SpringPlaywrightIT {
 
     @Test
     void testDialogGridHasThreeRow() {
-        DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
+        fillComboBoxAndOpenDialog(null);
         Assertions.assertEquals(3, GridElement.get(dialogContent()).getTotalRowCount());
     }
 
     @Test
     void testDialogFilter() {
-        DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
+        fillComboBoxAndOpenDialog(null);
         TextFieldElement.getByLabel(dialogContent(), "Search").setValue("item3");
         GridElement gridElement = GridElement.get(dialogContent());
         Assertions.assertEquals(1, gridElement.getTotalRowCount());
