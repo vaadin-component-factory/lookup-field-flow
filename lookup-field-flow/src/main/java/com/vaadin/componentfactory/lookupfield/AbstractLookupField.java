@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -43,7 +44,6 @@ import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
@@ -62,8 +62,8 @@ import com.vaadin.flow.data.binder.HasFilterableDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.function.SerializableConsumer;
 import com.vaadin.flow.function.SerializableFunction;
+import com.vaadin.flow.internal.StateTree;
 import com.vaadin.flow.shared.Registration;
 
 import tools.jackson.databind.ObjectMapper;
@@ -103,6 +103,8 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
     public static final String DEFAULT_EMPTY_SELECTION = "Please select an item.";
     /** Internationalization properties of this component. */
     private LookupFieldI18n i18n;
+    /** Pending update of the i18n texts in the web component. */
+    private StateTree.ExecutionRegistration pendingI18nUpdate;
     /** Grid shown in the advanced search dialog. */
     private Grid<T> grid;
     /** Combo box used as the field. */
@@ -437,28 +439,44 @@ public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabl
         Objects.requireNonNull(i18n,
                 "The I18N properties object should not be null");
         this.i18n = i18n;
-        setI18nWithJS();
+        requestI18nUpdate();
     }
 
-    private void setI18nWithJS() {
-        runBeforeClientResponse(ui -> {
-            // The web component merges the object it gets over its default
-            // texts, so the texts left null here are left out and keep their
-            // default instead of being cleared.
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode i18nJson = mapper.createObjectNode();
-            mapper.valueToTree(i18n).properties().forEach(entry -> {
-                if (!entry.getValue().isNull()) {
-                    i18nJson.set(entry.getKey(), entry.getValue());
-                }
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        // The texts are sent with executeJs, which is not repeated when the
+        // element is attached again, so they are sent on every attach.
+        requestI18nUpdate();
+    }
+
+    private void requestI18nUpdate() {
+        getUI().ifPresent(ui -> {
+            if (pendingI18nUpdate != null) {
+                pendingI18nUpdate.remove();
+            }
+            pendingI18nUpdate = ui.beforeClientResponse(this, context -> {
+                pendingI18nUpdate = null;
+                executeI18nUpdate();
             });
-            getElement().executeJs("this.i18n = $0", i18nJson);
         });
     }
 
-    private void runBeforeClientResponse(SerializableConsumer<UI> command) {
-        getElement().getNode().runWhenAttached(ui -> ui
-                .beforeClientResponse(this, context -> command.accept(ui)));
+    private void executeI18nUpdate() {
+        if (i18n == null) {
+            return;
+        }
+        // The web component merges the object it gets over its default
+        // texts, so the texts left null here are left out and keep their
+        // default instead of being cleared.
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode i18nJson = mapper.createObjectNode();
+        mapper.valueToTree(i18n).properties().forEach(entry -> {
+            if (!entry.getValue().isNull()) {
+                i18nJson.set(entry.getKey(), entry.getValue());
+            }
+        });
+        getElement().executeJs("this.i18n = $0", i18nJson);
     }
 
 
