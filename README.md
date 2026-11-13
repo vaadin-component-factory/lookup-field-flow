@@ -17,6 +17,14 @@ The Lookup field component allows you to search a specific record with:
 - Version 4.x.x -> Vaadin 24.x
 - Version 5.x.x -> Vaadin 24.x.x (improved accessibility)
 - Version 6.x.x -> Vaadin 25.x
+- Version 7.x.x -> Vaadin 25.1+
+- Version 8.x.x -> Vaadin 25.1+ (web component based on Lit)
+
+Since version 8.0.0, the add-on uses `vcf-lookup-field` 8.x, which is built with Lit instead of Polymer.
+The dialog is now part of the lookup field's shadow root, so styles that targeted `vaadin-dialog`
+must use `vcf-lookup-field::part(dialog-overlay)`. See the
+[web component migration notes](https://github.com/vaadin-component-factory/vcf-lookup-field#migrating-to-800)
+for the other breaking changes.
 
 ## Development instructions
 
