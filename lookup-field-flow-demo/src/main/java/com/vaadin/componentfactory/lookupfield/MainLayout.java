@@ -24,9 +24,10 @@ public class MainLayout extends AppLayout {
         final RouterLink gridProView = new RouterLink("Grid pro", GridProView.class);
         final RouterLink themeView = new RouterLink("Themes", ThemeView.class);
         final RouterLink openView = new RouterLink("Programmatic open", ProgrammaticOpen.class);
+        final RouterLink stylingView = new RouterLink("Styling the dialog", StylingView.class);
         final VerticalLayout menuLayout = new VerticalLayout(personLookupField, simple, personLabelLookupField, i18nView,
                 binderView, customHeader, enableSelectButtonView, enableMultipleButtonView, createView, customFilterView,
-                customFilterTypeView, statesView, gridProView, themeView, openView);
+                customFilterTypeView, statesView, gridProView, themeView, openView, stylingView);
         addToDrawer(menuLayout);
         addToNavbar(drawerToggle);
     }

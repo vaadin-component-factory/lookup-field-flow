@@ -1,0 +1,34 @@
+/* The dialog parts are exposed on the lookup field with a `dialog-` prefix. */
+#styled-lookup::part(dialog-backdrop) {
+  background-color: var(--lumo-primary-color-10pct);
+}
+
+#styled-lookup::part(dialog-overlay) {
+  min-width: 32rem;
+}
+
+#styled-lookup::part(dialog-header) {
+  background-color: var(--lumo-primary-color-10pct);
+  border-bottom: 1px solid var(--lumo-primary-color-50pct);
+}
+
+#styled-lookup::part(dialog-title) {
+  color: var(--lumo-primary-text-color);
+}
+
+#styled-lookup::part(dialog-header-content) {
+  gap: var(--lumo-space-s);
+}
+
+#styled-lookup::part(dialog-content) {
+  padding: var(--lumo-space-l);
+}
+
+#styled-lookup::part(dialog-footer) {
+  background-color: var(--lumo-contrast-5pct);
+}
+
+/* The default buttons are in the light DOM of the lookup field. */
+#styled-lookup [slot='dialog-footer'] vaadin-button {
+  border-radius: 999px;
+}
