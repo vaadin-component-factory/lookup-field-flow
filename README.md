@@ -22,8 +22,9 @@ The Lookup field component allows you to search a specific record with:
 
 Since version 8.0.0, the add-on uses `vcf-lookup-field` 8.x, which is built with Lit instead of Polymer.
 The dialog is now part of the lookup field's shadow root, so styles that targeted `vaadin-dialog`
-must use `vcf-lookup-field::part(dialog-overlay)`. See the
-[web component migration notes](https://github.com/vaadin-component-factory/vcf-lookup-field#migrating-to-800)
+must use the dialog parts exposed on the lookup field, such as `vcf-lookup-field::part(dialog-overlay)`
+(see [Styling the dialog](#styling-the-dialog)). See the
+[web component migration notes](https://github.com/vaadin-component-factory/vcf-lookup-field#migrating-to-8x)
 for the other breaking changes.
 
 ## Development instructions
@@ -103,6 +104,23 @@ You can change the captions of the buttons, dialog header, serach label.
             .setCancel("Annuler"));
         add(lookupField);
     }
+```
+
+### Styling the dialog
+
+The dialog parts are exposed on the lookup field with a `dialog-` prefix: `dialog-backdrop`,
+`dialog-overlay`, `dialog-header`, `dialog-title`, `dialog-header-content`, `dialog-content`
+and `dialog-footer`. The default buttons are in the light DOM of the lookup field, so styles for
+`vaadin-button` reach them.
+
+```css
+vcf-lookup-field::part(dialog-header) {
+  border-bottom: 1px solid var(--lumo-contrast-10pct);
+}
+
+vcf-lookup-field [slot='dialog-footer'] vaadin-button {
+  border-radius: 999px;
+}
 ```
 
 ## Demo
