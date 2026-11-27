@@ -1,5 +1,6 @@
 package com.vaadin.componentfactory.lookupfield.it;
 
+import com.microsoft.playwright.Locator;
 import com.vaadin.componentfactory.lookupfield.it.support.SpringPlaywrightIT;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class ErroNotificationOnEmptySelectViewIT extends SpringPlaywrightIT {
     @Test
     void testEmptySelectButtonIsEnabled() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
-        ButtonElement select = ButtonElement.getByText(dialogElement.getFooterLocator(), "Select");
+        ButtonElement select = ButtonElement.getByText(dialogFooter(), "Select");
         select.assertEnabled();
         select.click(); // click open a notification but doesn't close the dialog
         dialogElement.assertOpen();
@@ -41,6 +42,15 @@ class ErroNotificationOnEmptySelectViewIT extends SpringPlaywrightIT {
         dialogElement.assertOpen();
         NotificationElement notificationElement = NotificationElement.getByText(page, "Empty selection");
         notificationElement.assertVisible();
+    }
+
+    /**
+     * Where the default footer buttons are. They are generated into the light
+     * DOM of {@code vcf-lookup-field} and shown in the dialog through a
+     * forwarded slot, so they are not inside the {@code vaadin-dialog} element.
+     */
+    private Locator dialogFooter() {
+        return page.locator("vcf-lookup-field > [slot='dialog-footer']");
     }
 
     private DialogElement fillComboBoxAndOpenDialog(String value) {
