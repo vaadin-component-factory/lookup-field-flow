@@ -85,7 +85,7 @@ import tools.jackson.databind.node.ObjectNode;
 @Uses(value = Button.class)
 @Tag("vcf-lookup-field")
 @JsModule("@vaadin-component-factory/vcf-lookup-field")
-@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "8.0.1")
+@NpmPackage(value = "@vaadin-component-factory/vcf-lookup-field", version = "8.0.2")
 @StyleSheet(value = "lookup-field.css")
 public abstract class AbstractLookupField<T, SelectT, ComboboxT extends HasEnabled & HasValidation & HasSize & HasValue<?, SelectT>,
         ComponentT extends AbstractLookupField<T, SelectT, ComboboxT, ComponentT, FilterType>, FilterType> extends Div
