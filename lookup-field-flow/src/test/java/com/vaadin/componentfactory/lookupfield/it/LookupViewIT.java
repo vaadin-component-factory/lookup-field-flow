@@ -39,13 +39,13 @@ class LookupViewIT extends SpringPlaywrightIT {
     @Test
     void testDialogFooterHasSelectButton() {
         DialogElement dialogElement = fillComboBoxWithItem1AndOpenDialog();
-        ButtonElement.getByText(dialogElement.getFooterLocator(), "Select").assertVisible();
+        ButtonElement.getByText(dialogFooter(), "Select").assertVisible();
     }
 
     @Test
     void testDialogFooterHasCancelButton() {
         DialogElement dialogElement = fillComboBoxWithItem1AndOpenDialog();
-        ButtonElement.getByText(dialogElement.getFooterLocator(), "Cancel").assertVisible();
+        ButtonElement.getByText(dialogFooter(), "Cancel").assertVisible();
     }
 
     @Test
@@ -77,7 +77,7 @@ class LookupViewIT extends SpringPlaywrightIT {
         GridElement gridElement = GridElement.get(dialogContent());
         Assertions.assertEquals(1, gridElement.getTotalRowCount());
         gridElement.select(0);
-        ButtonElement.getByText(dialogElement.getFooterLocator(), "Select").click();
+        ButtonElement.getByText(dialogFooter(), "Select").click();
         dialogElement.assertClosed();
         ComboBoxElement lookup = ComboBoxElement.getByLabel(page, "Item selector");
         lookup.assertValue("item3");
@@ -86,7 +86,7 @@ class LookupViewIT extends SpringPlaywrightIT {
     @Test
     void testEmptySelectButtonIsDisabled() {
         DialogElement dialogElement = fillComboBoxAndOpenDialog(null);
-        ButtonElement.getByText(dialogElement.getFooterLocator(), "Select").assertDisabled();
+        ButtonElement.getByText(dialogFooter(), "Select").assertDisabled();
     }
     /**
      * Where the search field and the grid of the dialog are. They stay children
@@ -95,6 +95,15 @@ class LookupViewIT extends SpringPlaywrightIT {
      */
     private Locator dialogContent() {
         return page.locator("vcf-lookup-field");
+    }
+
+    /**
+     * Where the default footer buttons are. Like the dialog content, they are
+     * generated into the light DOM of {@code vcf-lookup-field} and shown in the
+     * dialog through a forwarded slot.
+     */
+    private Locator dialogFooter() {
+        return page.locator("vcf-lookup-field > [slot='dialog-footer']");
     }
 
     /**
